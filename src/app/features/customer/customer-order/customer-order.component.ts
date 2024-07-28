@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
 import { OrderService } from 'src/app/shared/services/order.service';
 import { ProductService } from 'src/app/shared/services/product.service';
@@ -20,7 +19,6 @@ export class CustomerOrderComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,
     private manufacturerService: ManufacturerService,
     private productService: ProductService,
     private orderService: OrderService
@@ -81,12 +79,12 @@ export class CustomerOrderComponent implements OnInit {
         quantity: this.orderForm.get('quantity')?.value,
         finalAmount: this.finalAmount
       };
-      this.orderService.placeOrder(orderDetails).subscribe(() => {
+      /* this.orderService.placeOrder(orderDetails).subscribe(() => {
         this.snackBar.open('Order placed successfully', 'Close', {
           duration: 2000
         });
         this.orderForm.reset();
-      });
+      }); */
     }
   }
 }
