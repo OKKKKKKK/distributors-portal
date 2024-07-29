@@ -17,6 +17,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import {MatTableModule} from '@angular/material/table';
+
 
 @NgModule({
   imports: [
@@ -37,7 +39,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSidenavModule,
     MatMenuModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTableModule,
   ],
   exports: [
     MatButtonModule,
@@ -56,7 +59,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSidenavModule,
     MatMenuModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTableModule,
   ]
 })
 export class MaterialModule {}

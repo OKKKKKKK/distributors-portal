@@ -9,12 +9,20 @@ import { CustomerOrderComponent } from './features/customer/customer-order/custo
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CustomerOrderListComponent } from './features/customer/customer-order-list/customer-order-list.component';
+import { CustomerDashboardComponent } from './features/customer/customer-dashboard/customer-dashboard.component';
+import { DistributorDashboardComponent } from './features/distributor/distributor-dashboard/distributor-dashboard.component';
+import { ManufacturerDashboardComponent } from './features/manifacturer/manufacturer-dashboard/manufacturer-dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    CustomerOrderComponent
+    CustomerOrderComponent,
+    CustomerOrderListComponent,
+    CustomerDashboardComponent,
+    DistributorDashboardComponent,
+    ManufacturerDashboardComponent
   ],
   imports: [
     BrowserModule,

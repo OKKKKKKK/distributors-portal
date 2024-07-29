@@ -1,0 +1,36 @@
+.card-container {
+  .order-container {
+    .product-group {
+      display: flex;
+      gap: 16px;
+    }
+    .actions {
+      display: flex;
+      flex-direction: row-reverse !important;
+    }
+  }
+  .actions {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
+
+mat-card-title {
+  padding-bottom: 16px;
+}
+
+/* 
+  .add-button, .delete-button {
+    display: flex;
+    flex-direction: row-reverse;
+  } */
+
+@media (max-width: 600px) {
+  .product-group {
+    flex-direction: column;
+    mat-form-field,
+    button {
+      flex: 1 1 100%;
+    }
+  }
+}
