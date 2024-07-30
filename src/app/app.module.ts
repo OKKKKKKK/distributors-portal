@@ -13,6 +13,8 @@ import { CustomerOrderListComponent } from './features/customer/customer-order-l
 import { CustomerDashboardComponent } from './features/customer/customer-dashboard/customer-dashboard.component';
 import { DistributorDashboardComponent } from './features/distributor/distributor-dashboard/distributor-dashboard.component';
 import { ManufacturerDashboardComponent } from './features/manifacturer/manufacturer-dashboard/manufacturer-dashboard.component';
+import { CreateManufacturerComponent } from './features/manifacturer/create-manufacturer/create-manufacturer.component';
+import { ManufacturerListComponent } from './features/manifacturer/manufacturer-list/manufacturer-list.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { ManufacturerDashboardComponent } from './features/manifacturer/manufact
     CustomerOrderListComponent,
     CustomerDashboardComponent,
     DistributorDashboardComponent,
-    ManufacturerDashboardComponent
+    ManufacturerDashboardComponent,
+    CreateManufacturerComponent,
+    ManufacturerListComponent
   ],
   imports: [
     BrowserModule,
