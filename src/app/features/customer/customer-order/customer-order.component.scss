@@ -1,4 +1,4 @@
-.card-container {
+/* .card-container {
   .order-container {
     .product-group {
       display: flex;
@@ -17,14 +17,14 @@
 
 mat-card-title {
   padding-bottom: 16px;
-}
+} */
 
 /* 
   .add-button, .delete-button {
     display: flex;
     flex-direction: row-reverse;
   } */
-
+/* 
 @media (max-width: 600px) {
   .product-group {
     flex-direction: column;
@@ -32,5 +32,121 @@ mat-card-title {
     button {
       flex: 1 1 100%;
     }
+  }
+} */
+/* 
+.card-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.order-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.product-group {
+  display: flex;
+  gap: 18px;
+}
+
+.full-width {
+  flex: 1 1 100%;
+}
+
+.delete-button {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.add-button {
+  margin-left: auto;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .product-group {
+    flex-direction: column;
+  }
+} */
+
+.card-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.order-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product-group {
+  display: flex;
+  gap: 16px;
+}
+
+.full-width {
+  flex: 1 1 100%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.delete-button, .add-button {
+  flex: 0 0 auto;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Responsive styles for tablets */
+@media (max-width: 768px) {
+  .product-group {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .full-width {
+    flex: 1 1 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 480px) {
+  .product-group {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .full-width {
+    flex: 1 1 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .delete-button, .add-button {
+    width: 100%;
+    margin-top: 8px;
   }
 }
