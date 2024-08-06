@@ -1,0 +1,109 @@
+@import "../src/assets/sass/init.scss";
+
+.mat-mdc-form-field-infix {
+  min-height: 40px !important;
+}
+
+.mat-mdc-form-field {
+  .mdc-text-field {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  .mat-mdc-form-field-infix {
+    padding: 0.7rem 0 !important;
+  }
+  .mat-mdc-form-field-error {
+    color: var(--danger) !important;
+  }
+  .mdc-notched-outline__leading {
+    border-right: 0 !important;
+  }
+  .mdc-notched-outline__notch {
+    border-left: 0 !important;
+  }
+  &.mat-form-field-invalid {
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__leading {
+      border-color: var(--danger) !important;
+    }
+  }
+  .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+    top: 1.45rem !important;
+    left: 0.25rem !important;
+    &.mdc-floating-label--float-above {
+      top: 1.75rem !important;
+    }
+  }
+  .mat-mdc-form-field-hint-wrapper,
+  .mat-mdc-form-field-error-wrapper {
+    padding: 0 !important;
+    top: -0.5rem !important;
+  }
+  .mat-mdc-form-field-subscript-wrapper,
+  .mat-mdc-form-field-bottom-align::before {
+    height: 1.4rem !important;
+  }
+}
+
+.mat-form-field-appearance-outline {
+  &.mat-form-field-invalid {
+    &.mat-form-field-invalid {
+      .mat-form-field-outline-thick {
+        color: var(--danger) !important;
+      }
+    }
+  }
+}
+.mat-form-field {
+  font-size: 1rem !important;
+  &.mat-form-field-invalid {
+    .mat-form-field-label {
+      color: var(--danger) !important;
+    }
+  }
+}
+.mat-error {
+  color: var(--danger) !important;
+}
+.mat-typography {
+  font-size: 16px !important;
+}
+
+.mat-radio-container,
+.mat-radio-outer-circle,
+.mat-radio-inner-circle {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+
+.mat-radio-label-content {
+  font-size: 0.875rem !important;
+}
+.mdc-form-field {
+  display: flex !important;
+}
+
+.mdc-tab {
+  padding: 0 1.5rem !important;
+  height: 3rem !important;
+}
+
+.mat-mdc-tab-body-content {
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.e-rte-content {
+  max-height: calc(100vh - 52rem) !important;
+}
+
+.e-richtexteditor .e-resize-handle.e-south-east{
+  display: none;
+}
+
+mat-card-title {
+  padding-bottom: 16px;
+}
