@@ -1,0 +1,57 @@
+.card-container {
+  .actions {
+    display: flex;
+    align-self: flex-end;
+  }
+}
+
+.customer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .row-1 {
+    display: flex;
+    gap: 16px;
+  }
+  .full-width {
+    width: 100%;
+  }
+  .products {
+    .product-group {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .add-delete {
+      display: flex;
+      margin-bottom: 18px;
+      float: right;
+    }
+  }
+  .add-button {
+    align-self: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    .card-container {
+      .actions {
+        display: flex;
+        align-self: center;
+      }
+    }
+    .row-1 {
+      flex-direction: column;
+    }
+    .product-group {
+      flex-direction: column;
+
+      .delete-button {
+        align-self: flex-end;
+      }
+    }
+
+    .add-button {
+      align-self: center;
+    }
+  }
+}

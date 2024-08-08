@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
 
 @Component({
   selector: 'app-create-manufacturer',
@@ -9,13 +10,12 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class CreateManufacturerComponent implements OnInit {
   manufacturerForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private manufacturerService: ManufacturerService) {}
 
   ngOnInit(): void {
     this.manufacturerForm = this.fb.group({
-      id: ['', Validators.required],
       name: ['', Validators.required],
-      outstandingAmount: [0],
+      outstanding: [0],
       products: this.fb.array([]),
     });
 
@@ -28,9 +28,8 @@ export class CreateManufacturerComponent implements OnInit {
 
   addProduct(): void {
     const productGroup = this.fb.group({
-      productId: ['', Validators.required],
       name: ['', Validators.required],
-      rate: ['', Validators.required],
+      rate: ['', Validators.required]
     });
 
     this.productsArray.push(productGroup);
@@ -41,9 +40,12 @@ export class CreateManufacturerComponent implements OnInit {
   }
 
   saveManufacturer(): void {
+    console.log(this.manufacturerForm);
     if (this.manufacturerForm.valid) {
       const manufacturerData = this.manufacturerForm.value;
-      console.log('Manufacturer Data:', manufacturerData);
+      this.manufacturerService.createManufacturer(manufacturerData).subscribe(res=>{
+        console.log(res);
+      })
     }
   }
 }
