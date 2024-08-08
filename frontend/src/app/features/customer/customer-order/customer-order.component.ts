@@ -37,7 +37,7 @@ export class CustomerOrderComponent implements OnInit {
       products: this.fb.array([])
     });
     this.addProduct();
-    this.loadManufacturers();
+    // this.loadManufacturers();
     this.orderForm.get('manufacturer')?.valueChanges.subscribe((manufacturerId) => {
       this.loadProducts(manufacturerId);
     });
@@ -49,11 +49,11 @@ export class CustomerOrderComponent implements OnInit {
     });
   }
 
-  loadManufacturers() {
+  /* loadManufacturers() {
     this.manufacturerService.getManufacturers().subscribe((data:any) => {
       this.manufacturers = data;
     });
-  }
+  } */
   loadProducts(manufacturerId: string) {
     this.productService.getProductsByManufacturer(manufacturerId).subscribe((data:any) => {
       this.products = data;
