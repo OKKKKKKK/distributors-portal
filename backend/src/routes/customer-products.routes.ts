@@ -9,8 +9,8 @@ customerProductRouter.use(express.json());
 
 customerProductRouter.get("/", async (_req, res) => {
     try {
-        const manufacturers = await collections?.manufacturers?.find({}).toArray();
-        res.status(200).send(manufacturers);
+        const customerProducts = await collections?.CustomerProducts?.find({}).toArray();
+        res.status(200).send(customerProducts);
     } catch (error) {
         res.status(500).send({code: res.status(500), message: error instanceof Error ? error.message : "Unknown error"});
     }
@@ -19,10 +19,10 @@ customerProductRouter.get("/", async (_req, res) => {
 customerProductRouter.post("/", async (req, res) => {
     try {
       const customerProduct: CustomerProducts = req.body;
-      customerProduct.id = new ObjectId();
+      customerProduct.id = new UUID();
       customerProduct.products = customerProduct.products.map((product) => ({
         ...product,
-        productId: new ObjectId(product.productId),
+        productId: new UUID(product.productId),
       }));
   
       // const db = getDb();

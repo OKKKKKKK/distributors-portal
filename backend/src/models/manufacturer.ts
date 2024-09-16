@@ -3,14 +3,14 @@ import { Product } from "./product";
 
 
 export interface ProductReference {
-    productId: ObjectId | string;
+    productId: UUID | string;
     name: string;
     rate: number;
   }
 
 // Define the Manufacturer interface
 export interface Manufacturer {
-    id: ObjectId | string;
+    id: UUID | string;
     name: string;
     outstanding: number;
     products: ProductReference[];

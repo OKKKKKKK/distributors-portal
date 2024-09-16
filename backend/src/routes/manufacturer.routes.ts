@@ -34,10 +34,10 @@ manufactureerRouter.get("/", async (_req, res) => {
 manufactureerRouter.post("/", async (req, res) => {
     try {
       const manufacturer: Manufacturer = req.body;
-      manufacturer.id = new ObjectId();
+      manufacturer.id = new UUID();
       manufacturer.products = manufacturer.products.map((product) => ({
         ...product,
-        productId: new ObjectId(product.productId),
+        productId: new UUID(product.productId),
       }));
   
       // const db = getDb();

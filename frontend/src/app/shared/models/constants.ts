@@ -2,7 +2,7 @@ export interface Product {
   name: string;
   rate: number;
   manufacturerId: string;
-  id: string;
+  productId: string;
 }
 
 export interface Manufacturer {
@@ -29,4 +29,11 @@ export interface CustomerProducts {
   customerId: string;
   manufacturerId: string;
   products: productReference[]
+}
+
+export interface Order {
+  id: string;
+  date: Date;
+  customerId: string;
+  products: []
 }

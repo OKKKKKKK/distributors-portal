@@ -10,13 +10,13 @@ export interface Customer {
 }
 
 export interface productReference {
-    productId: ObjectId | string;
+    productId: UUID | string;
     rate: number;
 }
 
 export interface CustomerProducts {
-    id: ObjectId | string;
-    customerId: ObjectId | string;
-    manufacturerId: ObjectId | string;
+    id: UUID | string;
+    customerId: UUID | string;
+    manufacturerId: UUID | string;
     products: productReference[]
 }

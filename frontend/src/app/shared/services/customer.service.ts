@@ -2,6 +2,8 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Customer, CustomerProducts } from '../models/constants';
+import { toSignal } from '@angular/core/rxjs-interop';
+
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +33,11 @@ export class CustomerService {
     return this.httpClient.post(`${this.url}/customers`, customer);
   }
 
+  getCustomerProduct() {
+    return this.httpClient.get(`${this.url}/customer-products`);
+  }
+
   createCustomerProduct(customerProduct: CustomerProducts) {
-    return this.httpClient.post(`${this.url}/customers`, customerProduct);
+    return this.httpClient.post(`${this.url}/customer-products`, customerProduct);
   }
 }

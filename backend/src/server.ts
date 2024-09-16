@@ -5,6 +5,7 @@ import productRoutes from "./routes/product.routes";
 import { manufactureerRouter } from "./routes/manufacturer.routes";
 import { customerProductRouter } from "./routes/customer-products.routes";
 import { customerRouter } from "./routes/customer.routes";
+import { orderRouter } from "./routes/order.routes";
 
 const app = express();
 const port = 3000;
@@ -15,6 +16,7 @@ app.use("/products", productRoutes);
 app.use("/manufacturers", manufactureerRouter);
 app.use("/customers", customerRouter);
 app.use("/customer-products", customerProductRouter);
+app.use("/orders", orderRouter);
 
 
 connectToDatabase().then(() => {
