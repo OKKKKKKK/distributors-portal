@@ -1,0 +1,5 @@
+npx ts-node server.ts --- run backend application
+ng serve --- run frontend application
+
+Initiall have 4 modules 
+Customer, Manufacturer, Distributors, Orders 

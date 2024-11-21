@@ -1,49 +1,25 @@
-import { Component, OnInit, ViewChild, WritableSignal } from '@angular/core';
-import { MatTable, MatTableModule } from '@angular/material/table';
+// manufacturer-list.component.ts
+import { Component, OnInit, WritableSignal } from '@angular/core';
 import { Manufacturer } from 'src/app/shared/models/constants';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
 
-const ELEMENT_DATA: PeriodicElement[] = [];
 @Component({
   selector: 'app-manufacturer-list',
   templateUrl: './manufacturer-list.component.html',
   styleUrl: './manufacturer-list.component.scss',
 })
 export class ManufacturerListComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = [...ELEMENT_DATA];
-
-  @ViewChild(MatTable) table!: MatTable<PeriodicElement>;
+  displayedColumns: string[] = ['name', 'rate'];
   manufacturers$ = {} as WritableSignal<Manufacturer[]>;
 
-  constructor(private manuService: ManufacturerService) {
-
-  }
+  constructor(private manufacturerService: ManufacturerService) {}
 
   ngOnInit(): void {
     this.fetchManufacturers();
   }
-
   fetchManufacturers() {
-    this.manufacturers$ = this.manuService.manufacturers$;
+    this.manufacturers$ = this.manufacturerService.manufacturers$;
     console.log(this.manufacturers$());
-    this.manuService.getManufacturers();
-  }
-
-  addData() {
-    const randomElementIndex = Math.floor(Math.random() * ELEMENT_DATA.length);
-    this.dataSource.push(ELEMENT_DATA[randomElementIndex]);
-    this.table.renderRows();
-  }
-
-  removeData() {
-    this.dataSource.pop();
-    this.table.renderRows();
+    this.manufacturerService.getManufacturers();
   }
 }

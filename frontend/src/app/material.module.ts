@@ -63,7 +63,7 @@ import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
     MatDatepickerModule,
     MatNativeDateModule,
     MatTableModule,
-    MatExpansionModule
+    MatExpansionModule,
   ]
 })
 export class MaterialModule {}
