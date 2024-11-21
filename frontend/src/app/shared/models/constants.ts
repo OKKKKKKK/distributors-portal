@@ -2,18 +2,18 @@ export interface Product {
   name: string;
   rate: number;
   manufacturerId: string;
-  productId: string;
+  _id: string;
 }
 
 export interface Manufacturer {
   name: string;
   outstanding: number;
   products: Product[];
-  id: string;
+  _id: string;
 }
 
 export interface Customer {
-  id: string;
+  _id: string;
   name: string;
   address: string;
   outstanding: number;
@@ -25,14 +25,16 @@ export interface productReference {
 }
 
 export interface CustomerProducts {
-  id: string;
+  _id: string;
   customerId: string;
+  customerName: string;
   manufacturerId: string;
+  manufacturerName: string;
   products: productReference[]
 }
 
 export interface Order {
-  id: string;
+  _id: string;
   date: Date;
   customerId: string;
   products: []

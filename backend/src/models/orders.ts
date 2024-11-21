@@ -1,23 +1,23 @@
-import { UUID } from "mongodb";
 import { Date } from "mongoose";
+import { ObjectId } from "mongodb";
 
 
 export interface ProductReference {
-    productId: UUID | string;
+    productId: ObjectId;
     rate: number;
     quantity: number;
     subTotal: number;
 }
 
 export interface customerProductReference {
-    manufacturerId: UUID | string;
+    manufacturerId: ObjectId;
     products: ProductReference[];
 }
 
 export interface Orders {
-    id: UUID | string;
+    _id: ObjectId
     date: Date;
-    customerId: UUID | string;
+    customerId: ObjectId;
     items: customerProductReference[];
     finalAmount: number;
 }

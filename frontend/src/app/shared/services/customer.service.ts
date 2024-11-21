@@ -13,6 +13,7 @@ export class CustomerService {
   private url = 'http://localhost:3000';
   customers$ = signal<Customer[]>([]);
   customer$ = signal<Customer>({} as Customer);
+  customerProducts$ = signal<CustomerProducts[]>([]);
 
   constructor(private httpClient: HttpClient) {}
 
@@ -34,7 +35,10 @@ export class CustomerService {
   }
 
   getCustomerProduct() {
-    return this.httpClient.get(`${this.url}/customer-products`);
+    this.httpClient.get(`${this.url}/customer-products`).subscribe((res:any)=>{
+      this.customerProducts$.set(res);
+      return this.customerProducts$();
+    })
   }
 
   createCustomerProduct(customerProduct: CustomerProducts) {

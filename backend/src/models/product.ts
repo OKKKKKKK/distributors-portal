@@ -1,8 +1,8 @@
-import { ObjectId, UUID } from "mongodb";
+import { ObjectId } from "mongodb";
 
 export interface Product {
-    id: UUID | string;
+    _id: ObjectId;
     name: string;
     rate: number;
-    manufacturerId: UUID | string;
+    manufacturerId: ObjectId;
 }

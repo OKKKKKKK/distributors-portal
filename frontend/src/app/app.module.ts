@@ -18,6 +18,7 @@ import { ManufacturerListComponent } from './features/manifacturer/manufacturer-
 import { provideHttpClient } from '@angular/common/http';
 import { CreateCustomerComponent } from './features/customer/create-customer/create-customer.component';
 import { CustomerProductsComponent } from './features/customer/customer-products/customer-products.component';
+import { CustomerProductListComponent } from './features/customer/customer-product-list/customer-product-list.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { CustomerProductsComponent } from './features/customer/customer-products
     CreateManufacturerComponent,
     ManufacturerListComponent,
     CreateCustomerComponent,
-    CustomerProductsComponent
+    CustomerProductsComponent,
+    CustomerProductListComponent
   ],
   imports: [
     BrowserModule,

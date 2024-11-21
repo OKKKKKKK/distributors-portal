@@ -1,22 +1,22 @@
-import { ObjectId, UUID } from "mongodb";
+import { ObjectId } from "mongodb";
 
 
 // Define the customer interface
 export interface Customer {
-    id: UUID | string;
+    _id: ObjectId;
     name: string;
     address: string;
     outstanding: number;
 }
 
 export interface productReference {
-    productId: UUID | string;
+    productId: ObjectId;
     rate: number;
 }
 
 export interface CustomerProducts {
-    id: UUID | string;
-    customerId: UUID | string;
-    manufacturerId: UUID | string;
+    _id: ObjectId;
+    customerId: ObjectId;
+    manufacturerId: ObjectId;
     products: productReference[]
 }

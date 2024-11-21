@@ -1,5 +1,5 @@
 import * as express from "express";
-import { ObjectId, UUID } from "mongodb";
+import { ObjectId } from "mongodb";
 import { collections } from "../database";
 import { Manufacturer } from "../models/manufacturer";
 import { Customer } from "../models/customer";
@@ -19,7 +19,6 @@ customerRouter.get("/", async (_req, res) => {
 customerRouter.post("/", async (req, res) => {
     try {
       const customer: Customer = req.body;
-      customer.id = new UUID();
       const result = await collections?.customers?.insertOne(customer);
       if (result?.acknowledged) {
         res.status(201).send({customer: customer, code: '201', message: `Created a new customer: ID ${result.insertedId}.`});

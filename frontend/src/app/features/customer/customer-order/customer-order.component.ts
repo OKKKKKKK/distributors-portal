@@ -33,7 +33,7 @@ export class CustomerOrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCustomers();
-    this.loadCustomerProducts();
+    // this.loadCustomerProducts();
     this.loadManufacturers();
     this.orderForm = this.fb.group({
       customerId: ['', Validators.required],
@@ -64,12 +64,12 @@ export class CustomerOrderComponent implements OnInit {
     console.log(this.customers());
   }
 
-  loadCustomerProducts() {
-    this.customerService.getCustomerProduct().subscribe(res=>{
+  /* loadCustomerProducts() {
+    this.customerService.getCustomerProduct().subscribe((res: any)=>{
       this.customerProducts.set(res);
       console.log(this.customerProducts());
     });
-  }
+  } */
 
   loadManufacturers() {
     this.manufacturers = this.manufacturerService.manufacturers$;
@@ -145,7 +145,7 @@ export class CustomerOrderComponent implements OnInit {
 
   getProducts(index: number): void {
     const manufacturerId = this.itemsArray.at(index).get('manufacturerId')?.value;
-    const products = this.manufacturers().find((item) => item.id === manufacturerId)
+    const products = this.manufacturers().find((item) => item._id === manufacturerId)
           ?.products as Product[];
         this.products.set(products);
         console.log(this.products());
@@ -169,7 +169,7 @@ export class CustomerOrderComponent implements OnInit {
 
   updateProductRate(productId: string) {
     const selectedProduct = this.products().find(
-      (product) => product.productId === productId
+      (product) => product._id === productId
     );
     if (selectedProduct) {
       this.selectedProductRate = selectedProduct.rate;

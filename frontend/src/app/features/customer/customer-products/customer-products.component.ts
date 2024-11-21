@@ -69,7 +69,7 @@ export class CustomerProductsComponent implements OnInit {
     this.manuService.getManufacturers();
     this.customerProductForm.get('manufacturerId')?.valueChanges.subscribe(el=>{
       if(el) {
-        const products = this.manufacturers().find(item => item.id === el)?.products as Product[];
+        const products = this.manufacturers().find(item => item._id === el)?.products as Product[];
         this.products.set(products);
         console.log(this.products());
       }

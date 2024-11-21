@@ -1,16 +1,16 @@
-import { ObjectId, UUID } from "mongodb";
+import { ObjectId } from "mongodb";
 import { Product } from "./product";
 
 
 export interface ProductReference {
-    productId: UUID | string;
+    _id: ObjectId;
     name: string;
     rate: number;
   }
 
 // Define the Manufacturer interface
 export interface Manufacturer {
-    id: UUID | string;
+    _id: ObjectId;
     name: string;
     outstanding: number;
     products: ProductReference[];

@@ -3,13 +3,13 @@ import { Manufacturer } from "./models/manufacturer";
 import { Customer, CustomerProducts } from "./models/customer";
 import { Orders } from "./models/orders";
 
-const url = "mongodb+srv://omkarkukade95:KUnrix7WcwoPwFyx@distributorsportal.42nbq.mongodb.net/?retryWrites=true&w=majority&appName=distributorsPortal";
+const url = "mongodb+srv://omkarkukade95:kOjBibP72LhtxwCF@distributorsportal.42nbq.mongodb.net/?retryWrites=true&w=majority&appName=distributorsPortal";
 const client = new mongodb.MongoClient(url);
 
 export const collections: {
   manufacturers?: mongodb.Collection<Manufacturer>;
   customers?: mongodb.Collection<Customer>;
-  CustomerProducts?: mongodb.Collection<CustomerProducts>;
+  customerProducts?: mongodb.Collection<CustomerProducts>;
   orders?: mongodb.Collection<Orders>;
 } = {};
 
@@ -23,7 +23,7 @@ export const connectToDatabase = async () => {
   const customerCollection = db.collection<Customer>("customers");
   collections.customers = customerCollection;
   const customerProductCollection = db.collection<CustomerProducts>("customer_products");
-  collections.CustomerProducts = customerProductCollection;
+  collections.customerProducts = customerProductCollection;
   const ordersCollection = db.collection<Orders>("orders");
   collections.orders = ordersCollection;
   } catch (error) {

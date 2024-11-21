@@ -179,7 +179,7 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Customer</mat-label>
         <mat-select formControlName="customerId">
-          <mat-option *ngFor="let customer of customers()" [value]="customer.id">
+          <mat-option *ngFor="let customer of customers()" [value]="customer._id">
             {{ customer.name }}
           </mat-option>
         </mat-select>
@@ -193,7 +193,7 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Manufacturer</mat-label>
             <mat-select formControlName="manufacturerId" (selectionChange)="getProducts(i)">
-              <mat-option *ngFor="let manufacturer of manufacturers()" [value]="manufacturer.id">
+              <mat-option *ngFor="let manufacturer of manufacturers()" [value]="manufacturer._id">
                 {{ manufacturer.name }}
               </mat-option>
             </mat-select>
@@ -207,7 +207,7 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Product</mat-label>
                 <mat-select formControlName="productId" (selectionChange)="calculateAmount(i, j)">
-                  <mat-option *ngFor="let product of products()" [value]="product.productId">
+                  <mat-option *ngFor="let product of products()" [value]="product._id">
                     {{ product.name }}
                   </mat-option>
                 </mat-select>

@@ -1,3 +1,7 @@
+run with nodemon 
+npx nodemon --watch src --exec ts-node server.ts
+
+normal run 
 npx ts-node server.ts --- run backend application
 ng serve --- run frontend application
 

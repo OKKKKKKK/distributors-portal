@@ -1,5 +1,5 @@
 import * as express from "express";
-import { ObjectId, UUID } from "mongodb";
+import { ObjectId } from "mongodb";
 import { collections } from "../database";
 import { Manufacturer } from "../models/manufacturer";
 import { Customer } from "../models/customer";
@@ -20,7 +20,6 @@ orderRouter.get("/", async (_req, res) => {
 orderRouter.post("/", async (req, res) => {
     try {
       const order: Orders = req.body;
-      order.id = new UUID();
       const result = await collections?.orders?.insertOne(order);
       console.log(result);
       if (result?.acknowledged) {

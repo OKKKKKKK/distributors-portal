@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomerService } from 'src/app/shared/services/customer.service';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 
 @Component({
   selector: 'app-create-customer',
@@ -9,8 +10,10 @@ import { CustomerService } from 'src/app/shared/services/customer.service';
 })
 export class CreateCustomerComponent implements OnInit {
   customerForm!: FormGroup;
+  // private snackbarService = Inject(SnackbarService);
 
-  constructor(private fb: FormBuilder, private customerService: CustomerService) {}
+  constructor(private fb: FormBuilder, private customerService: CustomerService, 
+    private snackbarService: SnackbarService) {}
 
   ngOnInit(): void {
     this.customerForm = this.fb.group({
@@ -23,8 +26,13 @@ export class CreateCustomerComponent implements OnInit {
     console.log(this.customerForm);
     if (this.customerForm.valid) {
       const customerData = this.customerForm.value;
-      this.customerService.createcustomer(customerData).subscribe(res=>{
+      this.customerService.createcustomer(customerData).subscribe((res:any)=>{
         console.log(res);
+        if(res?.code === '201') {
+          this.snackbarService.show('Created Successfully!'); //show('Created Successfully!');
+        } else {
+          this.snackbarService.show('Something Went Wrong :(');
+        }
       })
     }
   }

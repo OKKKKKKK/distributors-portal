@@ -1,5 +1,5 @@
 import * as express from "express";
-import { ObjectId, UUID } from "mongodb";
+import { ObjectId } from "mongodb";
 import { collections } from "../database";
 import { Manufacturer } from "../models/manufacturer";
 
@@ -34,10 +34,9 @@ manufactureerRouter.get("/", async (_req, res) => {
 manufactureerRouter.post("/", async (req, res) => {
     try {
       const manufacturer: Manufacturer = req.body;
-      manufacturer.id = new UUID();
       manufacturer.products = manufacturer.products.map((product) => ({
         ...product,
-        productId: new UUID(product.productId),
+        _id: new ObjectId(),
       }));
   
       // const db = getDb();
