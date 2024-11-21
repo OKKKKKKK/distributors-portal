@@ -1,1 +1,29 @@
-<p>manufacturer-list works!</p>
+<!-- manufacturer-list.component.html -->
+<h3>Manufacturers: </h3>
+<div class="manufacturer-list">
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let manufacturer of manufacturers$()">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ manufacturer.name }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="products-list">
+        <table mat-table [dataSource]="manufacturer.products">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Product Name </th>
+            <td mat-cell *matCellDef="let product"> {{ product.name }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="rate">
+            <th mat-header-cell *matHeaderCellDef> Rate </th>
+            <td mat-cell *matCellDef="let product"> {{ product.rate | currency }} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

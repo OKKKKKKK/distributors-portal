@@ -1,0 +1,41 @@
+<mat-card class="card-container">
+  <mat-card-header>
+    <mat-card-title>Create Customer</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form
+      class="customer-container"
+      [formGroup]="customerForm"
+    >
+      <div class="row-1">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>customer Name</mat-label>
+          <input matInput formControlName="name" />
+          <mat-error *ngIf="customerForm.get('name')?.hasError('required')">
+            customer Name is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="address" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Outstanding Amount</mat-label>
+          <input matInput type="number" formControlName="outstanding" />
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+  <mat-card-actions class="actions">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      (click)="savecustomer()"
+    >
+      Save
+    </button>
+  </mat-card-actions>
+</mat-card>

@@ -1,24 +1,28 @@
 <mat-card class="card-container">
   <mat-card-header>
-    <mat-card-title>Create Manufacturer</mat-card-title>
+    <mat-card-title>Create Customer Products</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <form
       class="manufacturer-container"
-      [formGroup]="manufacturerForm"
+      [formGroup]="customerProductForm"
     >
       <div class="row-1">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Manufacturer Name</mat-label>
-          <input matInput formControlName="name" />
-          <mat-error *ngIf="manufacturerForm.get('name')?.hasError('required')">
-            Manufacturer Name is required
-          </mat-error>
+          <mat-label>Customer Name</mat-label>
+          <mat-select formControlName="customerId" name="customerId">
+            @for (customer of customers(); track customer) {
+              <mat-option [value]="customer._id">{{customer.name}}</mat-option>
+            }
+          </mat-select>
         </mat-form-field>
-
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Outstanding Amount</mat-label>
-          <input matInput type="number" formControlName="outstanding" />
+          <mat-label>Manufacturer Name</mat-label>
+          <mat-select formControlName="manufacturerId" name="manufacturerId">
+            @for (manu of manufacturers(); track manu) {
+              <mat-option [value]="manu._id">{{manu.name}}</mat-option>
+            }
+          </mat-select>
         </mat-form-field>
       </div>
       <div
@@ -33,12 +37,12 @@
         <div [formGroupName]="i" class="product-group">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Product Name</mat-label>
-            <input matInput formControlName="name" />
-            <mat-error *ngIf="productGroup.get('name')?.hasError('required')">
-              Product Name is required
-            </mat-error>
+            <mat-select formControlName="productId" name="productId">
+              @for (product of products(); track product) {
+                <mat-option [value]="product._id">{{product.name}}</mat-option>
+              }
+            </mat-select>
           </mat-form-field>
-
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Rate</mat-label>
             <input matInput type="number" formControlName="rate" />
@@ -69,9 +73,9 @@
       mat-raised-button
       color="primary"
       type="submit"
-      (click)="saveManufacturer()"
+      (click)="save()"
     >
-      Save Manufacturer
+      Save
     </button>
   </mat-card-actions>
 </mat-card>

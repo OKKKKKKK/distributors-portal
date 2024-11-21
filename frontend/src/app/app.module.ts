@@ -15,6 +15,10 @@ import { DistributorDashboardComponent } from './features/distributor/distributo
 import { ManufacturerDashboardComponent } from './features/manifacturer/manufacturer-dashboard/manufacturer-dashboard.component';
 import { CreateManufacturerComponent } from './features/manifacturer/create-manufacturer/create-manufacturer.component';
 import { ManufacturerListComponent } from './features/manifacturer/manufacturer-list/manufacturer-list.component';
+import { provideHttpClient } from '@angular/common/http';
+import { CreateCustomerComponent } from './features/customer/create-customer/create-customer.component';
+import { CustomerProductsComponent } from './features/customer/customer-products/customer-products.component';
+import { CustomerProductListComponent } from './features/customer/customer-product-list/customer-product-list.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,10 @@ import { ManufacturerListComponent } from './features/manifacturer/manufacturer-
     DistributorDashboardComponent,
     ManufacturerDashboardComponent,
     CreateManufacturerComponent,
-    ManufacturerListComponent
+    ManufacturerListComponent,
+    CreateCustomerComponent,
+    CustomerProductsComponent,
+    CustomerProductListComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +48,7 @@ import { ManufacturerListComponent } from './features/manifacturer/manufacturer-
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [],
+  providers: [provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

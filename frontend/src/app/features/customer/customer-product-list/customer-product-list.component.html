@@ -1,0 +1,38 @@
+<!-- manufacturer-list.component.html -->
+<h3>Customer Products: </h3>
+<div class="manufacturer-list">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let item of customerProducts$()">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ item.customerName }}
+          </mat-panel-title>
+          <mat-panel-title>
+            {{ item.manufacturerName }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="products-list">
+          <table mat-table [dataSource]="item.products">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Product Name </th>
+              <td mat-cell *matCellDef="let product"> {{ product.clientProduct.name }} </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="clientRate">
+              <th mat-header-cell *matHeaderCellDef> Client Rate </th>
+              <td mat-cell *matCellDef="let product"> {{ product.clientRate | currency }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actualRate">
+              <th mat-header-cell *matHeaderCellDef> Actual Rate </th>
+              <td mat-cell *matCellDef="let product"> {{ product.clientProduct.rate | currency }} </td>
+            </ng-container>
+  
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  

@@ -18,6 +18,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatTableModule} from '@angular/material/table';
+import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import {MatTableModule} from '@angular/material/table';
     MatDatepickerModule,
     MatNativeDateModule,
     MatTableModule,
+    MatExpansionModule
   ],
   exports: [
     MatButtonModule,
@@ -61,6 +63,7 @@ import {MatTableModule} from '@angular/material/table';
     MatDatepickerModule,
     MatNativeDateModule,
     MatTableModule,
+    MatExpansionModule,
   ]
 })
 export class MaterialModule {}
