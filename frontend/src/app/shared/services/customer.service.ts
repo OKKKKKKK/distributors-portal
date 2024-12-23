@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { Customer, CustomerProducts } from '../models/constants';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -29,17 +29,18 @@ export class CustomerService {
     return this.customers$();
   }
 
-  createcustomer(customer: Customer) {
-    console.log(customer);
-    return this.httpClient.post(`${this.url}/customers`, customer);
+  createcustomer(customer: Partial<Customer>): Promise<any> {
+    const customer$ =
+      this.httpClient.post<Customer>(`${this.url}/customers`, customer);
+    return firstValueFrom(customer$);
   }
 
   getCustomerProduct() {
     this.httpClient.get(`${this.url}/customer-products`).subscribe((res:any)=>{
       this.customerProducts$.set(res);
-      return this.customerProducts$();
     })
-  }
+    return this.customerProducts$();
+   }
 
   createCustomerProduct(customerProduct: CustomerProducts) {
     return this.httpClient.post(`${this.url}/customer-products`, customerProduct);

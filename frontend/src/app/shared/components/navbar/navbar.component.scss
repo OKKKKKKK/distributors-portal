@@ -16,5 +16,6 @@
   mat-sidenav-content {
     margin-top: 64px; /* Adjust based on your toolbar height */
     padding: 16px;
+    height: calc(100% - 100px);
   }
   

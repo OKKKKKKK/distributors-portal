@@ -7,15 +7,6 @@ import { CustomerProducts } from "../models/customer";
 export const customerProductRouter = express.Router();
 customerProductRouter.use(express.json());
 
-/* customerProductRouter.get("/", async (_req, res) => {
-    try {
-        const customerProducts = await collections?.customerProducts?.find({}).toArray();
-        res.status(200).send(customerProducts);
-    } catch (error) {
-        res.status(500).send({code: res.status(500), message: error instanceof Error ? error.message : "Unknown error"});
-    }
-}); */
-
 customerProductRouter.post("/", async (req, res) => {
     try {
       const customerProduct: CustomerProducts = req.body;
