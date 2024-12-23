@@ -3,9 +3,10 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
 
 @Component({
-  selector: 'app-create-manufacturer',
-  templateUrl: './create-manufacturer.component.html',
-  styleUrls: ['./create-manufacturer.component.scss'],
+    selector: 'app-create-manufacturer',
+    templateUrl: './create-manufacturer.component.html',
+    styleUrls: ['./create-manufacturer.component.scss'],
+    standalone: false
 })
 export class CreateManufacturerComponent implements OnInit {
   manufacturerForm!: FormGroup;

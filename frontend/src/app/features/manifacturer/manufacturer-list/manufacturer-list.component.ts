@@ -4,9 +4,10 @@ import { Manufacturer } from 'src/app/shared/models/constants';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
 
 @Component({
-  selector: 'app-manufacturer-list',
-  templateUrl: './manufacturer-list.component.html',
-  styleUrl: './manufacturer-list.component.scss',
+    selector: 'app-manufacturer-list',
+    templateUrl: './manufacturer-list.component.html',
+    styleUrl: './manufacturer-list.component.scss',
+    standalone: false
 })
 export class ManufacturerListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'rate'];

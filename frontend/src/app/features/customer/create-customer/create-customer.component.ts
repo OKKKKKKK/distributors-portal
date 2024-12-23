@@ -5,9 +5,10 @@ import { CustomerService } from 'src/app/shared/services/customer.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 
 @Component({
-  selector: 'app-create-customer',
-  templateUrl: './create-customer.component.html',
-  styleUrls: ['./create-customer.component.scss'],
+    selector: 'app-create-customer',
+    templateUrl: './create-customer.component.html',
+    styleUrls: ['./create-customer.component.scss'],
+    standalone: false
 })
 export class CreateCustomerComponent implements OnInit {
   

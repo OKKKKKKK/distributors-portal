@@ -11,9 +11,10 @@ import { OrderService } from 'src/app/shared/services/order.service';
 import { ProductService } from 'src/app/shared/services/product.service';
 
 @Component({
-  selector: 'app-customer-order',
-  templateUrl: './customer-order.component.html',
-  styleUrls: ['./customer-order.component.scss'],
+    selector: 'app-customer-order',
+    templateUrl: './customer-order.component.html',
+    styleUrls: ['./customer-order.component.scss'],
+    standalone: false
 })
 export class CustomerOrderComponent implements OnInit {
   orderForm!: FormGroup;
