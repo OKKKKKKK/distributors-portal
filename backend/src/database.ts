@@ -3,7 +3,7 @@ import { Manufacturer } from "./models/manufacturer";
 import { Customer, CustomerProducts } from "./models/customer";
 import { Orders } from "./models/orders";
 
-const url = "mongodb+srv://omkarkukade95:kOjBibP72LhtxwCF@distributorsportal.42nbq.mongodb.net/?retryWrites=true&w=majority&appName=distributorsPortal";
+const url = "mongodb+srv://omkarkukade95:LHAkZfINsy2qw4sJ@distributorsportal.42nbq.mongodb.net/?retryWrites=true&w=majority&appName=distributorsPortal";
 const client = new mongodb.MongoClient(url);
 
 export const collections: {

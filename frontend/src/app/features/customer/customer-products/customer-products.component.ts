@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Customer, Manufacturer, Product, productReference } from 'src/app/shared/models/constants';
 import { CustomerService } from 'src/app/shared/services/customer.service';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 
 @Component({
   selector: 'app-customer-products',
@@ -18,7 +19,10 @@ export class CustomerProductsComponent implements OnInit {
   displayedColumns: string[] = ['name', 'rate'];
 
 
-  constructor(private fb: FormBuilder, private customerService: CustomerService, private manuService: ManufacturerService) {}
+  constructor(private fb: FormBuilder, 
+    private customerService: CustomerService, 
+    private manuService: ManufacturerService,
+  private snackbarService: SnackbarService) {}
 
   ngOnInit(): void {
     this.fetchCustomers();
@@ -50,8 +54,15 @@ export class CustomerProductsComponent implements OnInit {
     console.log(this.customerProductForm);
     if (this.customerProductForm.valid) {
       const customerData = this.customerProductForm.value;
-      const response = this.customerService.createCustomerProduct(customerData).subscribe(res=> {
+      const response = this.customerService.createCustomerProduct(customerData).subscribe((res:any)=> {
         console.log(res);
+        if(res?.code === '201') {
+          this.snackbarService.show('Created Successfully!');
+          this.customerService.getCustomerProduct();
+          
+        } else {
+          this.snackbarService.show('Something Went Wrong :(');
+        }
       })
     }
   }

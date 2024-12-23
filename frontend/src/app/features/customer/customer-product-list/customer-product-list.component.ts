@@ -1,4 +1,4 @@
-import { Component, WritableSignal } from '@angular/core';
+import { Component, Signal, signal, WritableSignal } from '@angular/core';
 import { CustomerProducts } from 'src/app/shared/models/constants';
 import { CustomerService } from 'src/app/shared/services/customer.service';
 
@@ -10,16 +10,17 @@ import { CustomerService } from 'src/app/shared/services/customer.service';
 export class CustomerProductListComponent {
 
   displayedColumns: string[] = ['name', 'clientRate', 'actualRate'];
-  customerProducts$ = {} as WritableSignal<CustomerProducts[]>;
+  customerProducts$ = signal<CustomerProducts[]>([]);
+  test = signal<CustomerProducts[]>([]);
 
   constructor(private customerService: CustomerService) {}
 
   ngOnInit(): void {
-    this.fetchManufacturers();
+    this.getCustomerProducts();
   }
-  fetchManufacturers() {
-    this.customerService.getCustomerProduct();
-    this.customerProducts$ = this.customerService.customerProducts$;
-    console.log(this.customerProducts$());
+  getCustomerProducts() {
+    this.customerProducts$.set(this.customerService.getCustomerProduct());
+    // this.customerProducts$ = this.customerService.customerProducts$;
+    console.log(this.customerProducts$(), this.test());
   }
 }
