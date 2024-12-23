@@ -60,7 +60,6 @@ export class CustomerProductsComponent implements OnInit {
         if(res?.code === '201') {
           this.snackbarService.show('Created Successfully!');
           this.customerService.getCustomerProduct();
-          
         } else {
           this.snackbarService.show('Something Went Wrong :(');
         }

@@ -19,9 +19,14 @@ export class CustomerProductListComponent {
   ngOnInit(): void {
     this.getCustomerProducts();
   }
-  getCustomerProducts() {
-    this.customerProducts$.set(this.customerService.getCustomerProduct());
-    // this.customerProducts$ = this.customerService.customerProducts$;
-    console.log(this.customerProducts$(), this.test());
+  
+  async getCustomerProducts() {
+    try {
+      this.customerProducts$ = this.customerService.customerProducts$;
+      const customerProducts = await this.customerService.getCustomerProduct();
+    }
+    catch(err) {
+      console.error(err);
+    }
   }
 }
