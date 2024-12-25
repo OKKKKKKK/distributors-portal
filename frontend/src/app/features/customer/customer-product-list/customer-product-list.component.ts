@@ -22,8 +22,8 @@ export class CustomerProductListComponent {
   
   async getCustomerProducts() {
     try {
+      await this.customerService.getCustomerProduct();
       this.customerProducts$ = this.customerService.customerProducts$;
-      const customerProducts = await this.customerService.getCustomerProduct();
     }
     catch(err) {
       console.error(err);

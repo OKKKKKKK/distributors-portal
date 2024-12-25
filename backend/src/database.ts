@@ -3,7 +3,7 @@ import { Manufacturer } from "./models/manufacturer";
 import { Customer, CustomerProducts } from "./models/customer";
 import { Orders } from "./models/orders";
 
-const url = "mongodb+srv://omkarkukade95:LHAkZfINsy2qw4sJ@distributorsportal.42nbq.mongodb.net/?retryWrites=true&w=majority&appName=distributorsPortal";
+const url = "mongodb+srv://omkarkukade95:VnQ4htmNBikBpX0N@distributorsportal.42nbq.mongodb.net/?retryWrites=true&w=majority&appName=distributorsPortal";
 const client = new mongodb.MongoClient(url);
 
 export const collections: {
@@ -15,6 +15,8 @@ export const collections: {
 
 export const connectToDatabase = async () => {
   try {
+    const dns = require('dns');
+    dns.setDefaultResultOrder('ipv4first');
     await client.connect();
     console.log("Connected to database");
     const db = client.db("distributors_portal");

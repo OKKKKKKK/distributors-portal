@@ -11,6 +11,7 @@ export interface Customer {
 
 export interface productReference {
     productId: ObjectId;
+    productName: string;
     rate: number;
 }
 
@@ -18,5 +19,5 @@ export interface CustomerProducts {
     _id: ObjectId;
     customerId: ObjectId;
     manufacturerId: ObjectId;
-    products: productReference[]
+    products: productReference[];
 }
