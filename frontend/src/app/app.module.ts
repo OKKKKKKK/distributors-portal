@@ -5,11 +5,11 @@ import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MaterialModule } from './material.module';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { CustomerOrderComponent } from './features/customer/customer-order/customer-order.component';
+import { CustomerOrderComponent } from './features/order/customer-order/customer-order.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CustomerOrderListComponent } from './features/customer/customer-order-list/customer-order-list.component';
+import { CustomerOrderListComponent } from './features/order/customer-order-list/customer-order-list.component';
 import { CustomerDashboardComponent } from './features/customer/customer-dashboard/customer-dashboard.component';
 import { DistributorDashboardComponent } from './features/distributor/distributor-dashboard/distributor-dashboard.component';
 import { ManufacturerDashboardComponent } from './features/manifacturer/manufacturer-dashboard/manufacturer-dashboard.component';
@@ -19,12 +19,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { CreateCustomerComponent } from './features/customer/create-customer/create-customer.component';
 import { CustomerProductsComponent } from './features/customer/customer-products/customer-products.component';
 import { CustomerProductListComponent } from './features/customer/customer-product-list/customer-product-list.component';
+import { OrderDashboardComponent } from './features/order/order-dashboard/order-dashboard.component';
+import { importProvidersFrom } from '@angular/core';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    CustomerOrderComponent,
     CustomerOrderListComponent,
     CustomerDashboardComponent,
     DistributorDashboardComponent,
@@ -33,7 +34,9 @@ import { CustomerProductListComponent } from './features/customer/customer-produ
     ManufacturerListComponent,
     CreateCustomerComponent,
     CustomerProductsComponent,
-    CustomerProductListComponent
+    CustomerProductListComponent,
+    OrderDashboardComponent,
+    CustomerOrderComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,9 @@ import { CustomerProductListComponent } from './features/customer/customer-produ
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [provideHttpClient()],
+  providers: [
+    provideHttpClient()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

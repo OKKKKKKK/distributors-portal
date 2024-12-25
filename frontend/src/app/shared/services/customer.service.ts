@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom, Observable, of } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
 import { Customer, CustomerProducts } from '../models/constants';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -35,11 +35,11 @@ export class CustomerService {
     return firstValueFrom(customer$);
   }
 
-  getCustomerProduct() {
-    this.httpClient.get(`${this.url}/customer-products`).subscribe((res:any)=>{
-      this.customerProducts$.set(res);
-    })
-    return this.customerProducts$();
+  async getCustomerProduct(): Promise<CustomerProducts[]> {
+    const customerProduct = this.httpClient.get<CustomerProducts[]>(`${this.url}/customer-products`);
+    const response = await lastValueFrom(customerProduct);
+    this.customerProducts$.set(response);
+    return response;
    }
 
   createCustomerProduct(customerProduct: CustomerProducts) {

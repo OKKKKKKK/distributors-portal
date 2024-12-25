@@ -71,7 +71,7 @@ customerProductRouter.post("/", async (req, res) => {
                 input: "$products", // Loop through each product in customerProducts
                 as: "product",
                 in: {
-                  productId: "$$product.productId",
+                  _id: "$$product.productId",
                   clientRate: "$$product.rate",
                   clientProduct: {
                     $arrayElemAt: [
@@ -101,7 +101,7 @@ customerProductRouter.post("/", async (req, res) => {
           },
         },
       ]).toArray();
-      console.log(customerProducts);
+      // console.log(customerProducts);
       res.status(200).send(customerProducts);
     } catch (error) {
       console.log(error);

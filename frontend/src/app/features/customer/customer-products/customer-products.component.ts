@@ -6,9 +6,10 @@ import { ManufacturerService } from 'src/app/shared/services/manufacturer.servic
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 
 @Component({
-  selector: 'app-customer-products',
-  templateUrl: './customer-products.component.html',
-  styleUrls: ['./customer-products.component.scss'],
+    selector: 'app-customer-products',
+    templateUrl: './customer-products.component.html',
+    styleUrls: ['./customer-products.component.scss'],
+    standalone: false
 })
 export class CustomerProductsComponent implements OnInit {
   customerProductForm!: FormGroup;
@@ -59,7 +60,6 @@ export class CustomerProductsComponent implements OnInit {
         if(res?.code === '201') {
           this.snackbarService.show('Created Successfully!');
           this.customerService.getCustomerProduct();
-          
         } else {
           this.snackbarService.show('Something Went Wrong :(');
         }
