@@ -45,4 +45,9 @@ export class CustomerService {
   createCustomerProduct(customerProduct: CustomerProducts) {
     return this.httpClient.post(`${this.url}/customer-products`, customerProduct);
   }
+
+  //delete all customers
+  deleteAllCustomers(): Observable<any> {
+    return this.httpClient.delete(`${this.url}/customers`);
+  }
 }

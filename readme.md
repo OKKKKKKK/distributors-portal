@@ -37,7 +37,7 @@
     - **Backend**
       ```sh
       cd backend
-      npx nodemon --watch src --exec ts-node server.ts
+      npx nodemon --watch src --exec ts-node src/server.ts
       ```
     - **Frontend**
       ```sh

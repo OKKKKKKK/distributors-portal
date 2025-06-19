@@ -1,4 +1,12 @@
 <div [ngClass]="{'web-container': !isMobile, 'mobile-container': isMobile}">
+ <div class="example-button-row">
+    <div class="example-flex-container">
+        <h3>Delete all customers: </h3>
+      <button (click)="deleteAllCustomers()" matFab aria-label="Example icon button with a delete icon">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
   <app-create-customer></app-create-customer>
   <app-customer-products></app-customer-products>
   <app-customer-product-list></app-customer-product-list>

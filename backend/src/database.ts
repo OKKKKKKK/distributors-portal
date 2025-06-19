@@ -2,8 +2,9 @@ import * as mongodb from "mongodb";
 import { Manufacturer } from "./models/manufacturer";
 import { Customer, CustomerProducts } from "./models/customer";
 import { Orders } from "./models/orders";
+import { Distributor } from "./models/distributor";
 
-const url = "mongodb+srv://omkarkukade95:VnQ4htmNBikBpX0N@distributorsportal.42nbq.mongodb.net/?retryWrites=true&w=majority&appName=distributorsPortal";
+const url = "mongodb+srv://omkarkukade95:FqkzJAeRc2aAzPch@distributorsportal.42nbq.mongodb.net/?retryWrites=true&w=majority&appName=distributorsPortal";
 const client = new mongodb.MongoClient(url);
 
 export const collections: {
@@ -11,6 +12,7 @@ export const collections: {
   customers?: mongodb.Collection<Customer>;
   customerProducts?: mongodb.Collection<CustomerProducts>;
   orders?: mongodb.Collection<Orders>;
+  distributors?: mongodb.Collection<Distributor>;
 } = {};
 
 export const connectToDatabase = async () => {
@@ -28,6 +30,8 @@ export const connectToDatabase = async () => {
   collections.customerProducts = customerProductCollection;
   const ordersCollection = db.collection<Orders>("orders");
   collections.orders = ordersCollection;
+  const distributorCollection = db.collection<Distributor>("distributors");
+  collections.distributors = distributorCollection;
   } catch (error) {
     console.error("Database connection failed", error);
     process.exit(1);

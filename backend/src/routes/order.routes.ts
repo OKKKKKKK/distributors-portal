@@ -4,12 +4,18 @@ import { collections } from "../database";
 import { Manufacturer } from "../models/manufacturer";
 import { Customer } from "../models/customer";
 import { Orders } from "../models/orders";
+import { createOrder, getAllOrders } from "../controllers/order.controller";
+import { create } from "domain";
 
 export const orderRouter = express.Router();
 orderRouter.use(express.json());
 
 
-orderRouter.get("/", async (req, res) => {
+orderRouter.get("/", getAllOrders);
+orderRouter.post("/", createOrder);
+
+
+/* orderRouter.get("/", async (req, res) => {
   try {
     const orders = await collections?.orders?.find({}).toArray();
     if (!orders) {
@@ -46,7 +52,7 @@ orderRouter.get("/", async (req, res) => {
     res.status(500).send({ code: 500, message: error instanceof Error ? error.message : "Unknown error" });
   }
 });
-
+ */
 /* orderRouter.get("/", async (_req, res) => {
   try {
     const orders = await collections?.orders?.find({}).toArray();
@@ -68,7 +74,7 @@ orderRouter.get("/", async (req, res) => {
     res.status(500).send({ code: 500, message: error instanceof Error ? error.message : "Unknown error" });
   }
 }); */
-
+/* 
 orderRouter.post("/", async (req, res) => {
     try {
       console.log(req.body);
@@ -83,4 +89,4 @@ orderRouter.post("/", async (req, res) => {
     } catch (error) {
       res.status(400).send(error instanceof Error ? error.message : "Unknown error");
     }
-  });
+  }); */

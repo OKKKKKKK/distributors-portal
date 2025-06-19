@@ -1,5 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { CustomerService } from 'src/app/shared/services/customer.service';
 
 @Component({
     selector: 'app-customer-dashboard',
@@ -10,6 +11,9 @@ import { Component, OnInit } from '@angular/core';
 export class CustomerDashboardComponent implements OnInit {
   
   isMobile: boolean = false;
+
+  // inject services
+  customerService = inject(CustomerService);
   constructor(private breakpointObserver: BreakpointObserver) {
   }
 
@@ -18,5 +22,12 @@ export class CustomerDashboardComponent implements OnInit {
       .subscribe(result => {
         this.isMobile = result.matches;
       });
+  }
+
+  deleteAllCustomers() {
+    this.customerService.deleteAllCustomers().subscribe((res)=>{
+      console.log(res);
+      alert("deleted all customers");
+    })
   }
 }
