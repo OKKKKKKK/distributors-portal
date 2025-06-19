@@ -3,11 +3,15 @@ import { ObjectId } from "mongodb";
 import { collections } from "../database";
 import { Manufacturer } from "../models/manufacturer";
 import { CustomerProducts } from "../models/customer";
+import { createCustomerProduct, getAllCustomerProducts } from "../controllers/customerProduct.controller";
 
 export const customerProductRouter = express.Router();
 customerProductRouter.use(express.json());
 
-customerProductRouter.post("/", async (req, res) => {
+customerProductRouter.get("/", getAllCustomerProducts);
+customerProductRouter.post("/", createCustomerProduct);
+
+/* customerProductRouter.post("/", async (req, res) => {
     try {
       const customerProduct: CustomerProducts = req.body;
       customerProduct.customerId = new ObjectId(customerProduct.customerId);
@@ -110,7 +114,7 @@ customerProductRouter.post("/", async (req, res) => {
         message: error instanceof Error ? error.message : "Unknown error",
       });
     }
-  });
+  }); */
   
   
   

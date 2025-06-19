@@ -35,9 +35,9 @@ export interface productReference {
 export interface CustomerProducts {
   _id: string;
   customerId: string;
-  customerName: string;
+  customerInfo: Customer;
   manufacturerId: string;
-  manufacturerName: string;
+  manufacturerInfo: Manufacturer;
   products: productReference[]
 }
 

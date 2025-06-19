@@ -42,7 +42,7 @@ export class CustomerProductsComponent implements OnInit {
 
   addProduct(): void {
     const productGroup = this.fb.group({
-      productId: ['', Validators.required],
+      product: ['', Validators.required],
       rate: ['', Validators.required]
     });
     this.productsArray.push(productGroup);
@@ -52,7 +52,7 @@ export class CustomerProductsComponent implements OnInit {
     this.productsArray.removeAt(index);
   }
   save(): void {
-    console.log(this.customerProductForm);
+    console.log(this.customerProductForm.value);
     if (this.customerProductForm.valid) {
       const customerData = this.customerProductForm.value;
       const response = this.customerService.createCustomerProduct(customerData).subscribe((res:any)=> {

@@ -37,12 +37,16 @@
         <div [formGroupName]="i" class="product-group">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Product Name</mat-label>
-            <mat-select formControlName="productId" name="productId">
+            <mat-select formControlName="product" name="product">
               @for (product of products(); track product) {
-                <mat-option [value]="product._id">{{product.name}}</mat-option>
+                <mat-option [value]="product">{{product.name}}</mat-option>
               }
             </mat-select>
           </mat-form-field>
+          <!-- fetch current value of formControlName product in a span -->
+           <span>Manufacturer Rate: </span>
+          <span class="product-value">
+            {{ productGroup.get('product')?.value?.rate }}</span>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Rate</mat-label>
             <input matInput type="number" formControlName="rate" />
