@@ -68,3 +68,22 @@ export const getAllCustomerProducts = async (_req: Request, res: Response) => {
         handleErrorResponse(res, error, "Failed to fetch customer products.");
     }
 }
+
+// get customer products by customer ID
+export const getCustomerProductsByCustomerId = async (req: Request, res: Response) => {
+    try {
+        const { customerId } = req.params;
+        if (!ObjectId.isValid(customerId)) {
+            return res.status(400).json({ code: 400, message: "Invalid customer ID" });
+        }
+
+        const customerProducts = await collections?.customerProducts?.find({ customerId: new ObjectId(customerId) }).toArray();
+        if (customerProducts && customerProducts.length > 0) {
+            res.status(200).json(customerProducts);
+        } else {
+            res.status(404).json({ code: 404, message: "No products found for this customer" });
+        }
+    } catch (error) {
+        handleErrorResponse(res, error, "Failed to fetch customer products.");
+    }
+}

@@ -4,8 +4,9 @@ import { collections } from "../database";
 import { Manufacturer } from "../models/manufacturer";
 import { Customer } from "../models/customer";
 import { Orders } from "../models/orders";
-import { createOrder, getAllOrders } from "../controllers/order.controller";
+import { createOrder, getAllOrders, getAllOrdersWithDetails } from "../controllers/order.controller";
 import { create } from "domain";
+import { get } from "http";
 
 export const orderRouter = express.Router();
 orderRouter.use(express.json());
@@ -13,6 +14,7 @@ orderRouter.use(express.json());
 
 orderRouter.get("/", getAllOrders);
 orderRouter.post("/", createOrder);
+orderRouter.get("/all", getAllOrdersWithDetails);
 
 
 /* orderRouter.get("/", async (req, res) => {

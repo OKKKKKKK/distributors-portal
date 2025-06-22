@@ -13,5 +13,6 @@ export interface Manufacturer {
     _id: ObjectId;
     name: string;
     outstanding: number;
+    marginPercentage: number;
     products: ProductReference[];
 }

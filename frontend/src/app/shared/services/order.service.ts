@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { CustomerOrder } from '../models/constants';
+import { Order } from '../models/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +10,13 @@ export class OrderService {
 
   private url = 'http://localhost:3000';
 
-  orders$ = signal<CustomerOrder[]>([]);
-  order$ = signal<CustomerOrder>({} as CustomerOrder);
+  orders$ = signal<any[]>([]);
+  order$ = signal<Order>({} as Order);
 
   constructor(private httpClient: HttpClient) {}
 
   private refresh() {
-    this.httpClient.get<CustomerOrder[]>(`${this.url}/orders`)
+    this.httpClient.get<any[]>(`${this.url}/orders/all`)
       .subscribe(order => {
         this.orders$.set(order);
       });
@@ -32,10 +32,10 @@ export class OrderService {
     return this.httpClient.post(`${this.url}/orders`, orderDetail);
   } */
 
-  createOrder(orderDetail: Partial<CustomerOrder>): Promise<any> {
+  createOrder(orderDetail: Partial<Order>): Promise<any> {
     console.log(orderDetail);
       const customerOrder$ =
-        this.httpClient.post<CustomerOrder>(`${this.url}/orders`, orderDetail);
+        this.httpClient.post<Order>(`${this.url}/orders`, orderDetail);
       return firstValueFrom(customerOrder$);
     }
 }

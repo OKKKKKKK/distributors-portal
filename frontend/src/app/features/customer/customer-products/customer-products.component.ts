@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { calculatePercentageMargin } from 'src/app/shared/commonFunctions';
 import { Customer, Manufacturer, Product, productReference } from 'src/app/shared/models/constants';
 import { CustomerService } from 'src/app/shared/services/customer.service';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
@@ -18,6 +19,7 @@ export class CustomerProductsComponent implements OnInit {
   products = signal<Product[]>([]);
 
   displayedColumns: string[] = ['name', 'rate'];
+  marginPercentage: number = 0;
 
 
   constructor(private fb: FormBuilder, 
@@ -43,7 +45,7 @@ export class CustomerProductsComponent implements OnInit {
   addProduct(): void {
     const productGroup = this.fb.group({
       product: ['', Validators.required],
-      rate: ['', Validators.required]
+      customerRate: ['', Validators.required]
     });
     this.productsArray.push(productGroup);
   }
@@ -85,6 +87,19 @@ export class CustomerProductsComponent implements OnInit {
         console.log(this.products());
       }
     })
+  }
+
+  calculateRate(index: number, value: any): void {
+    console.log(index, value);
+    const customerId = this.customerProductForm.get('customerId')?.value;
+    const percentage = this.customers().find(item => item._id === customerId)?.marginPercentage || 0;
+    const customerRate = calculatePercentageMargin(value.rate, percentage);
+    // assign this value to customer rate
+    this.productsArray.at(index).get('customerRate')?.setValue(customerRate);
+  }
+
+  showPercentage(value: any){
+    this.marginPercentage = this.customers().find(item => item._id === value)?.marginPercentage || 0;
   }
 }
 

@@ -10,7 +10,7 @@ import { CustomerService } from 'src/app/shared/services/customer.service';
 })
 export class CustomerProductListComponent {
 
-  displayedColumns: string[] = ['name', 'clientRate', 'actualRate'];
+  displayedColumns: string[] = ['name', 'clientRate', 'MRP', 'distributorRate'];
   customerProducts$ = signal<CustomerProducts[]>([]);
   test = signal<CustomerProducts[]>([]);
 

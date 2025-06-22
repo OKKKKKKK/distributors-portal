@@ -23,11 +23,12 @@ export interface Customer {
   name: string;
   address: string;
   outstanding: number;
+  marginPercentage: number;
 }
 
 export interface productReference {
   productId: string;
-  rate: number;
+  customerRate: number;
   quantity: number;
   subTotal: number;
 }
@@ -41,14 +42,38 @@ export interface CustomerProducts {
   products: productReference[]
 }
 
-export interface CustomerOrder {
+/* export interface CustomerOrder {
   _id: string;
   customerId: string;
-  manufacturerId: string;
-  products: productReference[];
+  name: string;
+  items: productReference[];
   totalAmount: number;
-  orderDate: Date;
+  date: Date;
   status: string;
+} */
+
+export interface Order {
+  _id: string;
+  customerId: string;
+  date: string; // ISO string date
+  name: string; // name of the customer or order (e.g., "Alpana Foods")
+  totalAmount: number;
+  status: string; // Possible values: "Pending", "Completed", "Cancelled"
+  items: OrderItem[];
+}
+
+export interface OrderItem {
+  manufacturerId: string;
+  name: string; // Manufacturer name (e.g., "Joshi Sweets")
+  products: ProductItem[];
+}
+
+export interface ProductItem {
+  productId: string;
+  name: string;
+  quantity: number;
+  rate: number;
+  subTotal: number;
 }
 
 /* 

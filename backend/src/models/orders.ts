@@ -7,6 +7,7 @@ export interface ProductReference {
     rate: number;
     quantity: number;
     subTotal: number;
+    name: string;
 }
 
 export interface customerProductReference {

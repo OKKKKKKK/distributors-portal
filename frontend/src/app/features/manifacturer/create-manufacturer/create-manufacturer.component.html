@@ -20,6 +20,25 @@
           <mat-label>Outstanding Amount</mat-label>
           <input matInput type="number" formControlName="outstanding" />
         </mat-form-field>
+        <!-- create a field for margin percentage -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Margin Percentage</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="marginPercentage"
+            min="0"
+            max="100"
+          />
+          <mat-error
+            *ngIf="
+              manufacturerForm.get('marginPercentage')?.hasError('min') ||
+              manufacturerForm.get('marginPercentage')?.hasError('max')
+            "
+          >
+            Margin Percentage must be between 0 and 100
+          </mat-error>
+          </mat-form-field>
       </div>
       <div
         class="products"
@@ -40,10 +59,17 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Rate</mat-label>
-            <input matInput type="number" formControlName="rate" />
+            <mat-label>Rate (MRP)</mat-label>
+            <input matInput type="number" formControlName="rate" (change)="calculateDistributorRate(i, $event)" />
             <mat-error *ngIf="productGroup.get('rate')?.hasError('required')">
               Rate is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>distributors Rate</mat-label>
+            <input matInput type="number" formControlName="distributorsRate" />
+            <mat-error *ngIf="productGroup.get('distributorsRate')?.hasError('required')">
+              Distributors Rate is required
             </mat-error>
           </mat-form-field>
         </div>

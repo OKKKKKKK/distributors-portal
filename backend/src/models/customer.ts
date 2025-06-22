@@ -7,6 +7,7 @@ export interface Customer {
     name: string;
     address: string;
     outstanding: number;
+    marginPercentage: number;
 }
 
 export interface productReference {

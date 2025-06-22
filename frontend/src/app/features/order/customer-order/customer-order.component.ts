@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, Inject, OnInit, Signal, signal, Wr
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   Customer,
+  CustomerProducts,
   Manufacturer,
   Product,
 } from 'src/app/shared/models/constants';
@@ -23,8 +24,8 @@ export class CustomerOrderComponent implements OnInit {
   // signals
   customers = signal<Customer[]>([]);
   manufacturers = signal<Manufacturer[]>([]);
-  products = signal<Product[]>([]);
-  customerProducts = signal<any>([]);
+  products = signal<any[]>([]);
+  customerProducts$ = signal<CustomerProducts[]>([]);
   finalAmount: Signal<number>;
   // Injected services
   customerService = inject(CustomerService);
@@ -47,7 +48,7 @@ this.orderForm.valueChanges.subscribe((value) => {
       const items = this.orderForm.get('items')?.value || [];
       return items.reduce((total: number, item: any) => {
         return total + item.products.reduce((subTotal: number, product: any) => {
-          return subTotal + (product.rate * product.quantity);
+          return subTotal + (product.customerRate * product.quantity);
         }, 0);
       }, 0);
     });
@@ -61,8 +62,8 @@ this.orderForm.valueChanges.subscribe((value) => {
 
   ngOnInit(): void {
     this.loadCustomers();
-    this.loadCustomerProducts();
     this.loadManufacturers();
+    this.getCustomerProducts();
     /* this.orderForm = this.fb.group({
       customerId: ['', Validators.required],
       date: [new Date(), Validators.required],
@@ -82,19 +83,29 @@ this.orderForm.valueChanges.subscribe((value) => {
     this.manufacturers = this.manufacturerService.manufacturers$;
   }
 
-  loadCustomerProducts() {
+  async getCustomerProducts() {
+    try {
+      await this.customerService.getCustomerProduct();
+      this.customerProducts$ = this.customerService.customerProducts$;
+      console.log(this.customerProducts$());
+    }
+    catch(err) {
+      console.error(err);
+    }
+  }
+
+  /* loadCustomerProducts() {
     const customerProducts = this.customerService.getCustomerProduct();
     this.customerProducts = this.customerService.customerProducts$;
     this.customerProducts.set(customerProducts);
-    console.log(this.customerProducts);
-    /* const products = this.customerProducts().value;
-    
+    console.log(this.customerProducts());
+    const products = this.customerProducts().value;
     const manufacturers = products
       .filter((el: any) => el.customerId === this.orderForm.get('customerId')?.value)
       .map((el: any) => el.manufacturer);
     console.log(manufacturers);
-    this.manufacturers.set(manufacturers); */
-  }
+    this.manufacturers.set(manufacturers);
+  } */
   
   get itemsArray(): FormArray {
     return this.orderForm.get('items') as FormArray;
@@ -110,8 +121,9 @@ this.orderForm.valueChanges.subscribe((value) => {
   createProductGroup(): FormGroup {
     return this.fb.group({
       productId: [null, Validators.required],
+      name: [null, Validators.required],
       quantity: [0, [Validators.required, Validators.min(1)]],
-      rate: [0, Validators.required],
+      customerRate: [0, Validators.required],
       subTotal: [0, Validators.required]
     });
   }
@@ -140,22 +152,20 @@ this.orderForm.valueChanges.subscribe((value) => {
     // take products from customer products
     const customerId = this.orderForm.get('customerId')?.value;
     const manufacturerId = this.itemsArray.at(index).get('manufacturerId')?.value;
-    const products = this.customerProducts().find((el:any)=>{
-      if(el.customerId === customerId && el.manufacturerId === manufacturerId){
-        return el.products;
-      }
-    });
+    const customerProduct = this.customerProducts$().find((el: any) => el.customerId === customerId && el.manufacturerId === manufacturerId);
+    const products = customerProduct ? customerProduct.products : [];
     console.log(products);
-    this.products.set(products.products);
+    this.products.set(products);
   }
 
   getProductRate(itemIndex: number, productIndex: number, selectedProductId: string): void {
-    const selectedProduct = this.products().find((product) => product._id === selectedProductId);
-    if (selectedProduct) {
+    const selectedProduct = this.products().find(el => el.productId === selectedProductId);
+    if (selectedProduct && selectedProduct.customerRate !== undefined) {
       const productsArray = this.itemsArray.at(itemIndex).get('products') as FormArray;
-      const control = productsArray.at(productIndex).get('rate');
+      const control = productsArray.at(productIndex).get('customerRate');
       if (control) {
-        control.setValue(selectedProduct.clientRate);
+        control.patchValue(selectedProduct.customerRate);
+        productsArray.at(productIndex).get('name')?.patchValue(selectedProduct.product.name);
         control.markAsDirty(); // Mark the control as dirty
         control.updateValueAndValidity(); // Trigger change detection for the control
       }

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CustomerOrder } from 'src/app/shared/models/constants';
+import { Order } from 'src/app/shared/models/constants';
 import { OrderService } from 'src/app/shared/services/order.service';
 
 @Component({
@@ -9,8 +9,8 @@ import { OrderService } from 'src/app/shared/services/order.service';
     standalone: false
 })
 export class CustomerOrderListComponent {
-    displayedColumns: string[] = ['name', 'clientRate', 'actualRate'];
-    customerOrders$ = signal<CustomerOrder[]>([]);
+    displayedColumns: string[] = ['name', 'rate', 'quantity'];
+    customerOrders$ = signal<Order[]>([]);
     
       // injuctions
       private orderService = inject(OrderService);

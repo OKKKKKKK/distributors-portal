@@ -135,3 +135,50 @@ export const getOrdersByProductId = async (req: Request, res: Response) => {
         handleErrorResponse(res, error, "Failed to fetch orders for the product.");
     }
 };
+
+// get all orders with customer and product details
+export const getAllOrdersWithDetails = async (_req: Request, res: Response) => {
+    try {
+        debugger;
+        const orders = await collections?.orders?.find({}).toArray();
+        console.log("Fetched orders:", orders);
+        if (!orders || orders.length === 0) {
+            return res.status(404).json({ code: 404, message: "No orders found." });
+        }
+
+        const ordersWithDetails = await Promise.all(orders.map(async (order) => {
+            const customer = await collections?.customers?.findOne({ _id: new ObjectId(order.customerId) });
+            if (!customer) {
+                throw new Error(`Customer not found for order ID ${order._id}`);
+            }
+
+            const itemsWithDetails = await Promise.all(order.items.map(async (item) => {
+                const manufacturer = await collections?.manufacturers?.findOne({ _id: new ObjectId(item.manufacturerId) });
+                if (!manufacturer) {
+                    throw new Error(`Manufacturer not found for item ID ${item.manufacturerId}`);
+                }
+
+                /* const productsWithNames = item.products.map((product) => ({
+                    ...product,
+                    productName: product.name
+                })); */
+
+                return {
+                    ...item,
+                    name: manufacturer.name,
+                    // products: productsWithNames
+                };
+            }));
+
+            return {
+                ...order,
+                name: customer.name,
+                items: itemsWithDetails
+            };
+        }));
+        console.log("Orders with details:", ordersWithDetails);
+        res.status(200).json(ordersWithDetails);
+    } catch (error) {
+        handleErrorResponse(res, error, "Failed to fetch orders with details.");
+    }
+};

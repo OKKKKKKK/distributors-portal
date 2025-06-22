@@ -206,8 +206,8 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Product</mat-label>
                 <mat-select formControlName="productId" (selectionChange)="getProductRate(i, j, $event.value)">
-                  <mat-option *ngFor="let product of products()" [value]="product._id">
-                    {{ product.clientProduct.name }}
+                  <mat-option *ngFor="let product of products()" [value]="product.productId">
+                    {{ product.product.name }}
                   </mat-option>
                 </mat-select>
                 <mat-error *ngIf="product.get('productId')?.hasError('required')">
@@ -228,7 +228,7 @@
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Rate</mat-label>
-                <input matInput formControlName="rate" readonly />
+                <input matInput formControlName="customerRate" readonly />
               </mat-form-field>
               
               <div class="button-container" *ngIf="j === getProductsArray(i).length - 1">
