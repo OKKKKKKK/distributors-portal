@@ -3,6 +3,16 @@
 @import "./styles-mat-overrides.scss";
 @import "../src/assets/sass/init.scss";
 
+/* You can add global styles to this file, and also import other style files */
+@use 'styles/reboot';
+@use 'styles/themes';
+@use 'styles/colors';
+@use 'styles/grid';
+@use 'styles/helpers';
+@use 'styles/plugins';
+@use 'styles/custom';
+
+
 @include mat.core();
 
 html,
