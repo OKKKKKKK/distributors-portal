@@ -6,6 +6,9 @@ import { manufacturerRouter } from "./routes/manufacturer.routes";
 import { customerProductRouter } from "./routes/customer-products.routes";
 import { customerRouter } from "./routes/customer.routes";
 import { orderRouter } from "./routes/order.routes";
+/* import { startProducer } from './services/kafkaService';
+import { startConsumer } from "./consumers/customerConsumer";
+ */
 
 const app = express();
 const port = 3000;
@@ -25,3 +28,8 @@ connectToDatabase().then(() => {
     console.log(`Server is running on http://localhost:${port}`);
   });
 });
+
+/* 
+startProducer();
+startConsumer();
+ */
