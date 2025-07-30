@@ -1,6 +1,6 @@
 import * as express from "express";
 import { ObjectId } from "mongodb";
-import { collections } from "../database";
+import { collections } from "../config/database";
 import { Manufacturer } from "../models/manufacturer";
 import { CustomerProducts } from "../models/customer";
 import { createCustomerProduct, getAllCustomerProducts } from "../controllers/customerProduct.controller";

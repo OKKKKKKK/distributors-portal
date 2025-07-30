@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
-import { collections } from "../database";
+import { collections } from "../config/database";
 import { Orders } from "../models/orders";
 
 const handleErrorResponse = (res: Response, error: unknown, defaultMessage: string) => {
@@ -152,7 +152,7 @@ export const getAllOrdersWithDetails = async (_req: Request, res: Response) => {
                 throw new Error(`Customer not found for order ID ${order._id}`);
             }
 
-            const itemsWithDetails = await Promise.all(order.items.map(async (item) => {
+            const itemsWithDetails = await Promise.all(order.items.map(async (item:any) => {
                 const manufacturer = await collections?.manufacturers?.findOne({ _id: new ObjectId(item.manufacturerId) });
                 if (!manufacturer) {
                     throw new Error(`Manufacturer not found for item ID ${item.manufacturerId}`);

@@ -21,6 +21,14 @@ import { CustomerProductsComponent } from './features/customer/customer-products
 import { CustomerProductListComponent } from './features/customer/customer-product-list/customer-product-list.component';
 import { OrderDashboardComponent } from './features/order/order-dashboard/order-dashboard.component';
 import { importProvidersFrom } from '@angular/core';
+import { ClerkSignInComponent } from "ngx-clerk";
+import { ClerkSignUpComponent } from "ngx-clerk";
+import { ClerkUserProfileComponent } from "ngx-clerk";
+import { ClerkUserButtonComponent } from "ngx-clerk";
+import { ClerkOrganizationProfileComponent } from "ngx-clerk";
+import { ClerkOrganizationSwitcherComponent } from "ngx-clerk";
+import { ClerkOrganizationListComponent } from "ngx-clerk";
+import { ClerkCreateOrganizationComponent } from "ngx-clerk";
 
 @NgModule({
   declarations: [
@@ -45,12 +53,20 @@ import { importProvidersFrom } from '@angular/core';
     MaterialModule,
     ReactiveFormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    })
-  ],
+        enabled: !isDevMode(),
+        // Register the ServiceWorker as soon as the application is stable
+        // or after 30 seconds (whichever comes first).
+        registrationStrategy: 'registerWhenStable:30000'
+    }),
+    ClerkSignInComponent,
+    ClerkSignUpComponent,
+    ClerkUserProfileComponent,
+    ClerkUserButtonComponent,
+    ClerkOrganizationProfileComponent,
+    ClerkOrganizationSwitcherComponent,
+    ClerkOrganizationListComponent,
+    ClerkCreateOrganizationComponent
+],
   providers: [
     provideHttpClient()
   ],

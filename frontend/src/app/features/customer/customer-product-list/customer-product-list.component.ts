@@ -1,4 +1,4 @@
-import { Component, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, Signal, signal, WritableSignal } from '@angular/core';
 import { CustomerProducts } from 'src/app/shared/models/constants';
 import { CustomerService } from 'src/app/shared/services/customer.service';
 

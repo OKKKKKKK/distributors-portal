@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
-import { collections } from "../database";
+import { collections } from "../config/database";
 import { Customer } from "../models/customer";
 
 const handleErrorResponse = (res: Response, error: unknown, defaultMessage: string) => {

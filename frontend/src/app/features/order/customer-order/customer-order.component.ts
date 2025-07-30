@@ -1,5 +1,17 @@
-import { Component, computed, effect, inject, Inject, OnInit, Signal, signal, WritableSignal, ɵunwrapWritableSignal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  Inject,
+  OnInit,
+  Signal,
+  signal,
+  WritableSignal,
+  ɵunwrapWritableSignal,
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 import {
   Customer,
   CustomerProducts,
@@ -12,14 +24,14 @@ import { OrderService } from 'src/app/shared/services/order.service';
 import { ProductService } from 'src/app/shared/services/product.service';
 
 @Component({
-    selector: 'app-customer-order',
-    templateUrl: './customer-order.component.html',
-    styleUrls: ['./customer-order.component.scss'],
-    standalone: false
+  selector: 'app-customer-order',
+  templateUrl: './customer-order.component.html',
+  styleUrls: ['./customer-order.component.scss'],
+  standalone: false,
 })
 export class CustomerOrderComponent implements OnInit {
   // variables
-  orderForm!: FormGroup;  
+  orderForm!: FormGroup;
   selectedProductRate: number = 0;
   // signals
   customers = signal<Customer[]>([]);
@@ -35,25 +47,30 @@ export class CustomerOrderComponent implements OnInit {
   finalAmountEffect: any;
 
   constructor() {
-
     this.orderForm = this.fb.group({
       customerId: ['', Validators.required],
       date: [new Date(), Validators.required],
       items: this.fb.array([]),
+      finalAmount: ['', Validators.required],
     });
 
     this.finalAmount = signal(0);
-this.orderForm.valueChanges.subscribe((value) => {
-    this.finalAmount = computed(() => {
-      const items = this.orderForm.get('items')?.value || [];
-      return items.reduce((total: number, item: any) => {
-        return total + item.products.reduce((subTotal: number, product: any) => {
-          return subTotal + (product.customerRate * product.quantity);
+    this.orderForm.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
+      this.finalAmount = computed(() => {
+        const items = this.orderForm.get('items')?.value || [];
+        return items.reduce((total: number, item: any) => {
+          return (
+            total +
+            item.products.reduce((subTotal: number, product: any) => {
+              return subTotal + product.customerRate * product.quantity;
+            }, 0)
+          );
         }, 0);
-      }, 0);
+      });
+      this.orderForm
+        .get('finalAmount')
+        ?.patchValue(this.finalAmount(), { emitEvent: false });
     });
-
-  });
 
     this.finalAmountEffect = effect(() => {
       console.log('Final Amount:', this.finalAmount());
@@ -64,12 +81,6 @@ this.orderForm.valueChanges.subscribe((value) => {
     this.loadCustomers();
     this.loadManufacturers();
     this.getCustomerProducts();
-    /* this.orderForm = this.fb.group({
-      customerId: ['', Validators.required],
-      date: [new Date(), Validators.required],
-      items: this.fb.array([]),
-      
-    }); */
     this.addItem();
   }
 
@@ -88,25 +99,11 @@ this.orderForm.valueChanges.subscribe((value) => {
       await this.customerService.getCustomerProduct();
       this.customerProducts$ = this.customerService.customerProducts$;
       console.log(this.customerProducts$());
-    }
-    catch(err) {
+    } catch (err) {
       console.error(err);
     }
   }
 
-  /* loadCustomerProducts() {
-    const customerProducts = this.customerService.getCustomerProduct();
-    this.customerProducts = this.customerService.customerProducts$;
-    this.customerProducts.set(customerProducts);
-    console.log(this.customerProducts());
-    const products = this.customerProducts().value;
-    const manufacturers = products
-      .filter((el: any) => el.customerId === this.orderForm.get('customerId')?.value)
-      .map((el: any) => el.manufacturer);
-    console.log(manufacturers);
-    this.manufacturers.set(manufacturers);
-  } */
-  
   get itemsArray(): FormArray {
     return this.orderForm.get('items') as FormArray;
   }
@@ -114,7 +111,7 @@ this.orderForm.valueChanges.subscribe((value) => {
   createItemGroup(): FormGroup {
     return this.fb.group({
       manufacturerId: [null, Validators.required],
-      products: this.fb.array([this.createProductGroup()])
+      products: this.fb.array([this.createProductGroup()]),
     });
   }
 
@@ -124,7 +121,7 @@ this.orderForm.valueChanges.subscribe((value) => {
       name: [null, Validators.required],
       quantity: [0, [Validators.required, Validators.min(1)]],
       customerRate: [0, Validators.required],
-      subTotal: [0, Validators.required]
+      subTotal: [0, Validators.required],
     });
   }
 
@@ -151,54 +148,57 @@ this.orderForm.valueChanges.subscribe((value) => {
   getProducts(index: number): void {
     // take products from customer products
     const customerId = this.orderForm.get('customerId')?.value;
-    const manufacturerId = this.itemsArray.at(index).get('manufacturerId')?.value;
-    const customerProduct = this.customerProducts$().find((el: any) => el.customerId === customerId && el.manufacturerId === manufacturerId);
+    const manufacturerId = this.itemsArray
+      .at(index)
+      .get('manufacturerId')?.value;
+    const customerProduct = this.customerProducts$().find(
+      (el: any) =>
+        el.customerId === customerId && el.manufacturerId === manufacturerId
+    );
     const products = customerProduct ? customerProduct.products : [];
     console.log(products);
     this.products.set(products);
   }
 
-  getProductRate(itemIndex: number, productIndex: number, selectedProductId: string): void {
-    const selectedProduct = this.products().find(el => el.productId === selectedProductId);
+  getProductRate(
+    itemIndex: number,
+    productIndex: number,
+    selectedProductId: string
+  ): void {
+    const selectedProduct = this.products().find(
+      (el) => el.productId === selectedProductId
+    );
+    console.log(selectedProduct);
     if (selectedProduct && selectedProduct.customerRate !== undefined) {
-      const productsArray = this.itemsArray.at(itemIndex).get('products') as FormArray;
+      const productsArray = this.itemsArray
+        .at(itemIndex)
+        .get('products') as FormArray;
       const control = productsArray.at(productIndex).get('customerRate');
       if (control) {
         control.patchValue(selectedProduct.customerRate);
-        productsArray.at(productIndex).get('name')?.patchValue(selectedProduct.product.name);
+        productsArray
+          .at(productIndex)
+          .get('name')
+          ?.patchValue(selectedProduct.product.name);
+
         control.markAsDirty(); // Mark the control as dirty
         control.updateValueAndValidity(); // Trigger change detection for the control
       }
     }
   }
 
-  /* calculateAmount(itemIndex: number, productIndex: number): void {
-    const product = this.getProductsArray(itemIndex).at(productIndex);
-    const rate = this.products().find(p => p._id === product.get('productId')?.value)?.clientRate || 0;
-    const quantity = product.get('quantity')?.value || 1;
-    product.get('rate')?.setValue(rate);
-    const totalAmount = this.itemsArray.controls.reduce((total, item) => {
-      return total + this.getProductsArray(itemIndex).controls.reduce((subTotal, prod) => {
-        return subTotal + (prod.get('rate')?.value * prod.get('quantity')?.value);
-      }, 0);
-    }, 0);
-    // this.orderForm.get('finalAmount')?.setValue(totalAmount);
-  } */
-
-  /* updateProductRate(productId: string) {
-    const selectedProduct = this.products().find(
-      (product) => product._id === productId
-    );
-    if (selectedProduct) {
-      this.selectedProductRate = selectedProduct.clientRate;
-      this.orderForm.get('rate')?.setValue(this.selectedProductRate);
-      this.updateFinalAmount(this.orderForm.get('quantity')?.value);
-    }
-  } */
-
-  updateFinalAmount(quantity: number) {
-    // this.finalAmount = quantity * this.selectedProductRate;
-    // this.orderForm.get('finalAmount')?.setValue(this.finalAmount);
+  calculateSubtotal(itemIndex: number, productIndex: number, event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const indexQuantity = inputElement && !isNaN(Number(inputElement.value)) ? Number(inputElement.value) : 0;
+    const productsArray = this.itemsArray
+      .at(itemIndex)
+      .get('products') as FormArray;
+    const productRateControl = productsArray
+      .at(productIndex)
+      .get('customerRate');
+    const productRate = productRateControl ? Number(productRateControl.value) : 0;
+    const subtotal = indexQuantity * productRate;
+    productsArray.at(productIndex).get('subTotal')?.patchValue(subtotal);
   }
 
   placeOrder() {

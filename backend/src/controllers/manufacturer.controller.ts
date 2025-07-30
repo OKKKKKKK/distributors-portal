@@ -1,4 +1,4 @@
-import { collections } from "../database";
+import { collections } from "../config/database";
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { Manufacturer } from "../models/manufacturer";

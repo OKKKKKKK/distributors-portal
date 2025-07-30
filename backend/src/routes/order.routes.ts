@@ -1,6 +1,6 @@
 import * as express from "express";
 import { ObjectId } from "mongodb";
-import { collections } from "../database";
+import { collections } from "../config/database";
 import { Manufacturer } from "../models/manufacturer";
 import { Customer } from "../models/customer";
 import { Orders } from "../models/orders";

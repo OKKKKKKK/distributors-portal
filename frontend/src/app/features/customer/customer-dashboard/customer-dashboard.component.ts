@@ -11,6 +11,7 @@ import { CustomerService } from 'src/app/shared/services/customer.service';
 export class CustomerDashboardComponent implements OnInit {
   
   isMobile: boolean = false;
+  action: string = '';
 
   // inject services
   customerService = inject(CustomerService);
@@ -29,5 +30,8 @@ export class CustomerDashboardComponent implements OnInit {
       console.log(res);
       alert("deleted all customers");
     })
+  }
+  processAction(action: any) {
+    this.action = action;
   }
 }

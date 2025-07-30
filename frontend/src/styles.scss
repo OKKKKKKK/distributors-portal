@@ -3,6 +3,8 @@
 @import "./styles-mat-overrides.scss";
 @import "../src/assets/sass/init.scss";
 
+@import "bootstrap/scss/bootstrap";
+
 @include mat.core();
 
 html,

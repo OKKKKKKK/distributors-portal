@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ClerkService } from 'ngx-clerk';
+
 
 @Component({
     selector: 'app-root',
@@ -9,4 +11,10 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'distributors-portal';
   test = 'dist-portal';
+
+  constructor(private _clerk: ClerkService) {
+    this._clerk.__init({ 
+      publishableKey: 'pk_test_ZWFnZXItY2hpbXAtMy5jbGVyay5hY2NvdW50cy5kZXYk'
+     });
+  }
 }

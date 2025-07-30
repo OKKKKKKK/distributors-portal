@@ -7,6 +7,8 @@ import { CustomerDashboardComponent } from './features/customer/customer-dashboa
 import { DistributorDashboardComponent } from './features/distributor/distributor-dashboard/distributor-dashboard.component';
 import { ManufacturerDashboardComponent } from './features/manifacturer/manufacturer-dashboard/manufacturer-dashboard.component';
 import { OrderDashboardComponent } from './features/order/order-dashboard/order-dashboard.component';
+import { catchAllRoute, ClerkAuthGuardService } from 'ngx-clerk';
+
 
 const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent},
@@ -19,8 +21,18 @@ const routes: Routes = [
 
 ];
 
+/* const routes: Routes = [
+  { path: 'dashboard', component: DashboardComponent, canActivate: [ClerkAuthGuardService]  },
+  { path: '', component: AppComponent },
+  { path: 'error', component: ErrorComponent },
+  { path: 'customers', component: CustomerDashboardComponent, canActivate: [ClerkAuthGuardService] },
+  { path: 'distributors', component: DistributorDashboardComponent, canActivate: [ClerkAuthGuardService] },
+  { path: 'manufacturer', component: ManufacturerDashboardComponent, canActivate: [ClerkAuthGuardService] },
+  { path: 'order', component: OrderDashboardComponent, canActivate: [ClerkAuthGuardService] },
+];
+ */
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
