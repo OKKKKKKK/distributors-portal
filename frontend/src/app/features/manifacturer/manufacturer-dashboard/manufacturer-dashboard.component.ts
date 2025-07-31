@@ -9,6 +9,7 @@ import { Component } from '@angular/core';
 })
 export class ManufacturerDashboardComponent {
   isMobile: boolean = false;
+  action: string = '';
   constructor(private breakpointObserver: BreakpointObserver) {}
   ngOnInit(): void {
     this.breakpointObserver
@@ -16,5 +17,9 @@ export class ManufacturerDashboardComponent {
       .subscribe((result) => {
         this.isMobile = result.matches;
       });
+  }
+
+  getSharedData(event: any) {
+    this.action = event.cancel === true ?   '' : this.action;
   }
 }

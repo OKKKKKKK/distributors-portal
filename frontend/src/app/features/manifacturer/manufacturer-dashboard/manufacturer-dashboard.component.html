@@ -1,5 +1,10 @@
 
-<div [ngClass]="{ 'web-container': !isMobile, 'mobile-container': isMobile }">
-  <app-create-manufacturer></app-create-manufacturer>
-  <app-manufacturer-list></app-manufacturer-list>
+<div class="container py-5 my-5 border rounded shadow">
+  <div class="d-flex gap-3 mb-4">
+    <button type="button" class="btn btn-primary" (click)="action = 'manufacturer'">Create Manufacturer</button>
+  </div>
+  @if (action !== '') {
+    <app-create-manufacturer (shareData)="getSharedData($event)"></app-create-manufacturer>
+  }
+    <app-manufacturer-list></app-manufacturer-list>
 </div>

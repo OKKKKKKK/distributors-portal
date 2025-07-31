@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { calculatePercentageMargin } from 'src/app/shared/commonFunctions';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
+import { SharedData } from '../../customer/customer-products/customer-products.component';
 
 @Component({
     selector: 'app-create-manufacturer',
@@ -11,6 +12,9 @@ import { ManufacturerService } from 'src/app/shared/services/manufacturer.servic
 })
 export class CreateManufacturerComponent implements OnInit {
   manufacturerForm!: FormGroup;
+
+    @Output() shareData = new EventEmitter<SharedData>();
+  
 
   constructor(private fb: FormBuilder, private manufacturerService: ManufacturerService) {}
 
@@ -59,5 +63,9 @@ export class CreateManufacturerComponent implements OnInit {
     const percentage = this.manufacturerForm.get('marginPercentage')?.value || 0;
     const distributorRate = calculatePercentageMargin(mrp, percentage);
     this.productsArray.at(i).get('distributorsRate')?.setValue(distributorRate);
+  }
+
+   cancel() {
+    this.shareData.emit( {cancel: true});
   }
 }
