@@ -74,7 +74,7 @@ Backend: Node.js, Express.js, MongoDB, TypeScript
 
 **Run the Application**
 Backend:
-npx nodemon --watch src --exec ts-node server.ts
+npx run dev
 Frontend:
 ng serve
 
