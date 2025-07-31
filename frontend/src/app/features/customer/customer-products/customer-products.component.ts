@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { calculatePercentageMargin } from 'src/app/shared/commonFunctions';
 import { Customer, Manufacturer, Product, productReference } from 'src/app/shared/models/constants';
@@ -6,6 +6,9 @@ import { CustomerService } from 'src/app/shared/services/customer.service';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 
+export interface SharedData {
+  cancel: boolean
+}
 @Component({
     selector: 'app-customer-products',
     templateUrl: './customer-products.component.html',
@@ -20,6 +23,8 @@ export class CustomerProductsComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'rate'];
   marginPercentage: number = 0;
+
+  @Output() shareData = new EventEmitter<SharedData>();
 
 
   constructor(private fb: FormBuilder, 
@@ -100,6 +105,10 @@ export class CustomerProductsComponent implements OnInit {
 
   showPercentage(value: any){
     this.marginPercentage = this.customers().find(item => item._id === value)?.marginPercentage || 0;
+  }
+
+  cancel() {
+    this.shareData.emit( {cancel: true});
   }
 }
 

@@ -1,21 +1,28 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Customer } from 'src/app/shared/models/constants';
 import { CustomerService } from 'src/app/shared/services/customer.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { SharedData } from '../customer-products/customer-products.component';
 
 @Component({
-    selector: 'app-create-customer',
-    templateUrl: './create-customer.component.html',
-    styleUrls: ['./create-customer.component.scss'],
-    standalone: false
+  selector: 'app-create-customer',
+  templateUrl: './create-customer.component.html',
+  styleUrls: ['./create-customer.component.scss'],
+  standalone: false,
 })
 export class CreateCustomerComponent implements OnInit {
-  
   // snackbarService = Inject(SnackbarService);
   // customerService = Inject(CustomerService);
+
+  @Output() shareData = new EventEmitter<SharedData>();
+
   customerForm!: FormGroup;
-  constructor(private fb: FormBuilder, private customerService: CustomerService, private snackbarService: SnackbarService) {}
+  constructor(
+    private fb: FormBuilder,
+    private customerService: CustomerService,
+    private snackbarService: SnackbarService
+  ) {}
 
   ngOnInit(): void {
     this.customerForm = this.fb.group({
@@ -30,16 +37,14 @@ export class CreateCustomerComponent implements OnInit {
     if (this.customerForm.invalid) {
       return;
     }
-    const customerPayload =
-      this.customerForm.value as Partial<Customer>;
+    const customerPayload = this.customerForm.value as Partial<Customer>;
     if (customerPayload._id) {
       await this.saveCustomer(customerPayload._id, customerPayload);
-    }
-    else {
+    } else {
       await this.createCustomer(customerPayload);
     }
   }
- 
+
   saveCustomer(_id: string, customerPayload: Partial<Customer>) {
     throw new Error('Method not implemented.');
   }
@@ -47,14 +52,13 @@ export class CreateCustomerComponent implements OnInit {
   async createCustomer(customer: Partial<Customer>) {
     try {
       const newCustomer = await this.customerService.createcustomer(customer);
-      if(newCustomer?.code === 201) {
+      if (newCustomer?.code === 201) {
         this.snackbarService.show('Created Successfully!');
         this.customerService.getcustomers();
       } else {
         this.snackbarService.show('Something Went Wrong :(');
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.error(err);
       alert(`Error creating the course.`);
     }
@@ -69,4 +73,8 @@ export class CreateCustomerComponent implements OnInit {
         }
       })
     } */
+
+  cancel() {
+    this.shareData.emit({ cancel: true });
+  }
 }

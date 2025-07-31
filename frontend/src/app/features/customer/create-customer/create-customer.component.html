@@ -1,4 +1,4 @@
-<mat-card class="card-container">
+<mat-card class="card-container mb-5">
   <mat-card-header>
     <mat-card-title>Create Customer</mat-card-title>
   </mat-card-header>
@@ -47,14 +47,23 @@
       </div>
     </form>
   </mat-card-content>
-  <mat-card-actions class="actions">
+  <mat-card-actions class="m-2 gap-2 actions">
     <button
       mat-raised-button
       color="primary"
-      type="submit"
+      type="button"
+      [disabled]="!customerForm.valid"
       (click)="onSave()"
     >
       Save
+    </button>
+    <button
+    mat-stroked-button
+      color="primary"
+      type="button"
+      (click)="cancel()"
+    >
+      Cancel
     </button>
   </mat-card-actions>
 </mat-card>

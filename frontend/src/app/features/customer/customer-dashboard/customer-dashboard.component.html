@@ -5,10 +5,13 @@
   </div>
  @switch (action) {
       @case ('customer') {
-        <app-create-customer></app-create-customer>
+        <app-create-customer (shareData)="getSharedData($event)"></app-create-customer>
       }
       @case ('customerProduct') {
-        <app-customer-products></app-customer-products>
+        <app-customer-products (shareData)="getSharedData($event)"></app-customer-products>
+      }
+      @default {
+
       }
     }
     <app-customer-product-list></app-customer-product-list>

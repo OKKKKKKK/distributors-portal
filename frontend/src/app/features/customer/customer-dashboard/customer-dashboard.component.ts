@@ -15,6 +15,7 @@ export class CustomerDashboardComponent implements OnInit {
 
   // inject services
   customerService = inject(CustomerService);
+  cancel = false;
   constructor(private breakpointObserver: BreakpointObserver) {
   }
 
@@ -33,5 +34,10 @@ export class CustomerDashboardComponent implements OnInit {
   }
   processAction(action: any) {
     this.action = action;
+  }
+
+  getSharedData(event: any) {
+    // this.cancel = event.cancel;
+    this.action = event.cancel === true ?   '' : this.action;
   }
 }

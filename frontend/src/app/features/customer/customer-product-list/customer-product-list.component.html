@@ -12,6 +12,14 @@
           <mat-panel-title>
             {{ item.manufacturerInfo.name }}
           </mat-panel-title>
+          <div class="d-flex">
+          <mat-panel-title>
+            <mat-icon (click)="$event.stopPropagation()">edit</mat-icon>
+          </mat-panel-title>
+          <mat-panel-title>
+          <mat-icon (click)="$event.stopPropagation()">delete</mat-icon>
+          </mat-panel-title>
+          </div>
         </mat-expansion-panel-header>
         <div class="products-list">
           <table mat-table [dataSource]="item.products">
