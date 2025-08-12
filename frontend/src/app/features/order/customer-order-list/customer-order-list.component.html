@@ -8,8 +8,19 @@
             {{ item.name }}
           </mat-panel-title>
           <mat-panel-title>
-            {{ item.totalAmount }}
+            {{ item.date | date: 'longDate'}}
           </mat-panel-title>
+          <mat-panel-title>
+            {{ item.finalAmount | currency:'INR' }}
+          </mat-panel-title>
+          <div class="d-flex">
+          <mat-panel-title>
+            <mat-icon (click)="$event.stopPropagation()">edit</mat-icon>
+          </mat-panel-title>
+          <mat-panel-title>
+          <mat-icon (click)="$event.stopPropagation()">delete</mat-icon>
+          </mat-panel-title>
+          </div>
         </mat-expansion-panel-header>
         <div class="products-list">
           <div *ngFor="let manufacturer of item.items">
@@ -22,7 +33,7 @@
 
               <ng-container matColumnDef="rate">
                 <th mat-header-cell *matHeaderCellDef> Client Rate </th>
-                <td mat-cell *matCellDef="let product"> {{ product.customerRate | currency }} </td>
+                <td mat-cell *matCellDef="let product"> {{ product.customerRate | currency:'INR' }} </td>
               </ng-container>
 
               <ng-container matColumnDef="quantity">

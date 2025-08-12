@@ -1,2 +1,9 @@
-<app-customer-order-list></app-customer-order-list>
-<app-customer-order></app-customer-order>
+<div class="container py-5 my-5 border rounded shadow">
+  <div class="d-flex gap-3 mb-4">
+    <button type="button" class="btn btn-primary" (click)="action = 'manufacturer'">Create Order</button>
+  </div>
+    @if (action !== '') {
+<app-customer-order (shareData)="getSharedData($event)"></app-customer-order>
+    }
+    <app-customer-order-list></app-customer-order-list>
+</div>

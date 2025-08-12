@@ -1,140 +1,79 @@
-@use '@angular/material' as mat;
+:host {
+  display: block;
+}
 
-$primary-blue: #2196f3;
-$danger-red: #f44336;
+.container {
+  max-width: 1200px;
+}
 
+mat-card {
+  border-radius: 8px;
+  background: #fff;
+}
 
-.card-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+mat-card-header {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
 
-  @include mat.elevation(3);
-
-  mat-card-header {
-    background-color: var(--primary-blue, #2196f3);
-    color: var(--white, #fff);
-    padding: 10px;
-    border-radius: 4px 4px 0 0;
-
-    mat-card-title {
-      font-size: 1.5rem;
-      font-weight: bold;
-      text-align: center;
-    }
-  }
-
-  mat-card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 15px;
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-
-      mat-form-field {
-        width: 100%;
-
-        &.full-width {
-          min-width: 100%;
-        }
-      }
-    }
-
-    .button-container {
-      .add-button {
-        background-color: var(--primary-blue, #{$primary-blue});
-        color: var(--white, #fff);
-    
-        &:hover {
-          background-color: darken($primary-blue, 10%);
-        }
-      }
-    
-      .delete-button {
-        background-color: var(--danger, #{$danger-red});
-        color: var(--white, #fff);
-    
-        &:hover {
-          background-color: darken($danger-red, 10%);
-        }
-      }
-    }
-  }
-
-  mat-card-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-
-    button {
-      min-width: 120px;
-      font-size: 1rem;
-    }
+  mat-card-title {
+    font-weight: 600;
+    font-size: 1.25rem;
   }
 }
 
-/* Responsive Design */
-@media screen and (max-width: 600px) {
-  .card-container {
-    margin: 10px;
-    padding: 15px;
+.card {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
 
-    mat-card-header {
-      mat-card-title {
-        font-size: 1.2rem;
-      }
-    }
+.card.mb-3 {
+  margin-bottom: 1.5rem !important;
+}
 
-    mat-card-content {
-      form {
-        mat-form-field {
-          font-size: 0.9rem;
+mat-form-field {
+  margin-bottom: 0;
+}
 
-          input,
-          mat-select {
-            font-size: 0.9rem;
-          }
+button[mat-mini-fab] {
+  margin-left: 4px;
+}
 
-          mat-error {
-            font-size: 0.75rem;
-          }
-        }
-      }
+h5.fw-bold {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
 
-      .button-container {
-        .add-button,
-        .delete-button {
-          width: 36px;
-          height: 36px;
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
 
-          mat-icon {
-            font-size: 1rem;
-          }
-        }
-      }
-    }
+@media (max-width: 768px) {
+  .row.g-3 {
+    gap: 0.75rem !important;
+  }
 
-    mat-card-actions {
-      button {
-        font-size: 0.9rem;
-        padding: 5px 10px;
-      }
-    }
+  mat-form-field {
+    width: 100%;
+  }
+
+  .text-end {
+    text-align: left !important;
   }
 }
 
-/* Utility Styles */
-mat-error {
-  color: var(--danger, #f44336);
-  font-size: 0.85rem;
+/* Additional spacing for product rows */
+[formArrayName='products'] {
+  border-top: 1px dashed #dcdcdc;
+  margin-top: 10px;
+  padding-top: 10px;
 }
 
-mat-hint {
-  font-size: 0.8rem;
-  color: var(--text-secondary, #757575);
+/* Quantity and Rate fields smaller on desktop */
+@media (min-width: 992px) {
+  .col-md-3 mat-form-field,
+  .col-md-2 mat-form-field {
+    max-width: 150px;
+  }
 }

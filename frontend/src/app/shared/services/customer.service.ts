@@ -50,4 +50,8 @@ export class CustomerService {
   deleteAllCustomers(): Observable<any> {
     return this.httpClient.delete(`${this.url}/customers`);
   }
+
+  deleteCustomerById(id: string) { 
+    return this.httpClient.delete(`${this.url}/customer/`)
+  }
 }

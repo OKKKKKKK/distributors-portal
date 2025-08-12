@@ -57,7 +57,7 @@ export interface Order {
   customerId: string;
   date: string; // ISO string date
   name: string; // name of the customer or order (e.g., "Alpana Foods")
-  totalAmount: number;
+  finalAmount: number;
   status: string; // Possible values: "Pending", "Completed", "Cancelled"
   items: OrderItem[];
 }

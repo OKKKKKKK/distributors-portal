@@ -2,13 +2,13 @@ import {
   Component,
   computed,
   effect,
+  EventEmitter,
   inject,
-  Inject,
   OnInit,
+  Output,
   Signal,
   signal,
   WritableSignal,
-  ɵunwrapWritableSignal,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime } from 'rxjs';
@@ -16,12 +16,11 @@ import {
   Customer,
   CustomerProducts,
   Manufacturer,
-  Product,
 } from 'src/app/shared/models/constants';
 import { CustomerService } from 'src/app/shared/services/customer.service';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
 import { OrderService } from 'src/app/shared/services/order.service';
-import { ProductService } from 'src/app/shared/services/product.service';
+import { SharedData } from '../../customer/customer-products/customer-products.component';
 
 @Component({
   selector: 'app-customer-order',
@@ -30,21 +29,22 @@ import { ProductService } from 'src/app/shared/services/product.service';
   standalone: false,
 })
 export class CustomerOrderComponent implements OnInit {
-  // variables
   orderForm!: FormGroup;
-  selectedProductRate: number = 0;
-  // signals
   customers = signal<Customer[]>([]);
-  manufacturers = signal<Manufacturer[]>([]);
-  products = signal<any[]>([]);
+  manufacturers = signal<Manufacturer[]>([]); // will hold filtered list
+  allManufacturers = signal<Manufacturer[]>([]); // store all manufacturers initially
   customerProducts$ = signal<CustomerProducts[]>([]);
+  productsList: WritableSignal<any[]>[] = []; // per-item product lists
   finalAmount: Signal<number>;
+  finalAmountEffect: any;
+
+  @Output() shareData = new EventEmitter<SharedData>();
+
   // Injected services
   customerService = inject(CustomerService);
   fb = inject(FormBuilder);
   manufacturerService = inject(ManufacturerService);
   orderService = inject(OrderService);
-  finalAmountEffect: any;
 
   constructor() {
     this.orderForm = this.fb.group({
@@ -55,14 +55,17 @@ export class CustomerOrderComponent implements OnInit {
     });
 
     this.finalAmount = signal(0);
-    this.orderForm.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
+
+    this.orderForm.valueChanges.pipe(debounceTime(200)).subscribe(() => {
       this.finalAmount = computed(() => {
         const items = this.orderForm.get('items')?.value || [];
         return items.reduce((total: number, item: any) => {
           return (
             total +
             item.products.reduce((subTotal: number, product: any) => {
-              return subTotal + product.customerRate * product.quantity;
+              return (
+                subTotal + (product.customerRate || 0) * (product.quantity || 0)
+              );
             }, 0)
           );
         }, 0);
@@ -82,6 +85,34 @@ export class CustomerOrderComponent implements OnInit {
     this.loadManufacturers();
     this.getCustomerProducts();
     this.addItem();
+
+    this.orderForm.get('customerId')?.valueChanges.subscribe((customerId) => {
+      if (customerId) {
+        // Get manufacturerIds linked to this customer
+        const customerProductList = this.customerProducts$().filter(
+          (cp) => cp.customerId === customerId
+        );
+
+        const allowedManufacturerIds = new Set(
+          customerProductList.map((cp) => cp.manufacturerId)
+        );
+
+        // Filter from all manufacturers
+        this.manufacturers.set(
+          this.allManufacturers().filter((m) =>
+            allowedManufacturerIds.has(m._id)
+          )
+        );
+
+        // Also reset manufacturer/product selections
+        this.itemsArray.clear();
+        this.productsList = [];
+        this.addItem();
+      } else {
+        // If no customer selected, clear list
+        this.manufacturers.set([]);
+      }
+    });
   }
 
   loadCustomers() {
@@ -91,14 +122,13 @@ export class CustomerOrderComponent implements OnInit {
 
   loadManufacturers() {
     this.manufacturerService.getManufacturers();
-    this.manufacturers = this.manufacturerService.manufacturers$;
+    this.allManufacturers = this.manufacturerService.manufacturers$;
   }
 
   async getCustomerProducts() {
     try {
       await this.customerService.getCustomerProduct();
       this.customerProducts$ = this.customerService.customerProducts$;
-      console.log(this.customerProducts$());
     } catch (err) {
       console.error(err);
     }
@@ -109,10 +139,15 @@ export class CustomerOrderComponent implements OnInit {
   }
 
   createItemGroup(): FormGroup {
-    return this.fb.group({
+    const group = this.fb.group({
       manufacturerId: [null, Validators.required],
       products: this.fb.array([this.createProductGroup()]),
     });
+
+    // create an empty signal for this item’s products
+    this.productsList.push(signal<any[]>([]));
+
+    return group;
   }
 
   createProductGroup(): FormGroup {
@@ -135,6 +170,7 @@ export class CustomerOrderComponent implements OnInit {
 
   removeItem(index: number): void {
     this.itemsArray.removeAt(index);
+    this.productsList.splice(index, 1); // remove corresponding products list
   }
 
   addProduct(index: number): void {
@@ -146,18 +182,18 @@ export class CustomerOrderComponent implements OnInit {
   }
 
   getProducts(index: number): void {
-    // take products from customer products
     const customerId = this.orderForm.get('customerId')?.value;
     const manufacturerId = this.itemsArray
       .at(index)
       .get('manufacturerId')?.value;
+
     const customerProduct = this.customerProducts$().find(
       (el: any) =>
         el.customerId === customerId && el.manufacturerId === manufacturerId
     );
+
     const products = customerProduct ? customerProduct.products : [];
-    console.log(products);
-    this.products.set(products);
+    this.productsList[index].set(products);
   }
 
   getProductRate(
@@ -165,48 +201,52 @@ export class CustomerOrderComponent implements OnInit {
     productIndex: number,
     selectedProductId: string
   ): void {
-    const selectedProduct = this.products().find(
+    const selectedProduct = this.productsList[itemIndex]().find(
       (el) => el.productId === selectedProductId
     );
-    console.log(selectedProduct);
+
     if (selectedProduct && selectedProduct.customerRate !== undefined) {
       const productsArray = this.itemsArray
         .at(itemIndex)
         .get('products') as FormArray;
       const control = productsArray.at(productIndex).get('customerRate');
+
       if (control) {
         control.patchValue(selectedProduct.customerRate);
         productsArray
           .at(productIndex)
           .get('name')
           ?.patchValue(selectedProduct.product.name);
-
-        control.markAsDirty(); // Mark the control as dirty
-        control.updateValueAndValidity(); // Trigger change detection for the control
+        control.markAsDirty();
+        control.updateValueAndValidity();
       }
     }
   }
 
   calculateSubtotal(itemIndex: number, productIndex: number, event: Event) {
     const inputElement = event.target as HTMLInputElement;
-    const indexQuantity = inputElement && !isNaN(Number(inputElement.value)) ? Number(inputElement.value) : 0;
+    const qty =
+      inputElement && !isNaN(Number(inputElement.value))
+        ? Number(inputElement.value)
+        : 0;
     const productsArray = this.itemsArray
       .at(itemIndex)
       .get('products') as FormArray;
-    const productRateControl = productsArray
-      .at(productIndex)
-      .get('customerRate');
-    const productRate = productRateControl ? Number(productRateControl.value) : 0;
-    const subtotal = indexQuantity * productRate;
+    const rateControl = productsArray.at(productIndex).get('customerRate');
+    const rate = rateControl ? Number(rateControl.value) : 0;
+    const subtotal = qty * rate;
     productsArray.at(productIndex).get('subTotal')?.patchValue(subtotal);
   }
 
   placeOrder() {
-    console.log(this.orderForm.value);
     if (this.orderForm.valid) {
       const orderData = this.orderForm.getRawValue();
-      console.log(orderData);
+      console.log('Order Placed:', orderData);
       this.orderService.createOrder(orderData);
     }
+  }
+
+  cancel() {
+    this.shareData.emit( {cancel: true});
   }
 }

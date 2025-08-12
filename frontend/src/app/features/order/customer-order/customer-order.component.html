@@ -1,102 +1,133 @@
- <mat-card class="card-container">
-  <mat-card-header>
-    <mat-card-title>Create Purchase Order</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form [formGroup]="orderForm" (ngSubmit)="placeOrder()">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Choose a date</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="date" />
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+<div class="container mt-4">
+  <mat-card class="shadow-sm p-3">
+    <mat-card-header>
+      <mat-card-title class="h4">Create Purchase Order</mat-card-title>
+    </mat-card-header>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Customer</mat-label>
-        <mat-select formControlName="customerId">
-          <mat-option *ngFor="let customer of customers()" [value]="customer._id">
-            {{ customer.name }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="orderForm.get('customerId')?.hasError('required')">
-          Customer is required
-        </mat-error>
-      </mat-form-field>
+    <mat-card-content>
+      <form [formGroup]="orderForm" (ngSubmit)="placeOrder()" class="row g-3">
 
-      <div formArrayName="items" *ngFor="let item of itemsArray.controls; let i = index;">
-        <div [formGroupName]="i">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Manufacturer</mat-label>
-            <mat-select formControlName="manufacturerId" (selectionChange)="getProducts(i)">
-              <mat-option *ngFor="let manufacturer of manufacturers()" [value]="manufacturer._id">
-                {{ manufacturer.name }}
+        <!-- Order Date -->
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Order Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date" />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <!-- Customer -->
+        <div class="col-md-8">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Customer</mat-label>
+            <mat-select formControlName="customerId">
+              <mat-option *ngFor="let customer of customers()" [value]="customer._id">
+                {{ customer.name }}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="item.get('manufacturerId')?.hasError('required')">
-              Manufacturer is required
+            <mat-error *ngIf="orderForm.get('customerId')?.hasError('required')">
+              Customer is required
             </mat-error>
           </mat-form-field>
+        </div>
 
-          <div formArrayName="products" *ngFor="let product of getProductsArray(i).controls; let j = index;">
-            <div [formGroupName]="j">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Product</mat-label>
-                <mat-select formControlName="productId" (selectionChange)="getProductRate(i, j, $event.value)">
-                  <mat-option *ngFor="let product of products()" [value]="product.productId">
-                    {{ product.product.name }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="product.get('productId')?.hasError('required')">
-                  Product is required
-                </mat-error>
-              </mat-form-field>
+        <!-- Items -->
+        <div class="col-12" formArrayName="items">
+          <div class="card mb-3 p-3 border rounded"
+               *ngFor="let item of itemsArray.controls; let i = index;"
+               [formGroupName]="i">
 
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Quantity</mat-label>
-                <input matInput type="number" formControlName="quantity" min="1" (change)="calculateSubtotal(i, j, $event)" />
-                <mat-error *ngIf="product.get('quantity')?.hasError('required')">
-                  Quantity is required
-                </mat-error>
-                <mat-error *ngIf="product.get('quantity')?.hasError('min')">
-                  Quantity must be at least 1
-                </mat-error>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Rate</mat-label>
-                <input matInput formControlName="customerRate" readonly />
-              </mat-form-field>
-              
-              <div class="button-container" *ngIf="j === getProductsArray(i).length - 1">
-                <button mat-mini-fab class="delete-button" (click)="removeProduct(i, j)">
+            <div class="row g-3 align-items-end">
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Manufacturer</mat-label>
+                  <mat-select formControlName="manufacturerId" (selectionChange)="getProducts(i)">
+                    <mat-option *ngFor="let manufacturer of manufacturers()" [value]="manufacturer._id">
+                      {{ manufacturer.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="item.get('manufacturerId')?.hasError('required')">
+                    Manufacturer is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 text-end">
+                <button mat-mini-fab color="warn" (click)="removeItem(i)">
                   <mat-icon>delete</mat-icon>
                 </button>
-                <button mat-mini-fab class="add-button" (click)="addProduct(i)">
+                <button mat-mini-fab color="primary" (click)="addItem()" *ngIf="i === itemsArray.length - 1">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
             </div>
-          </div>
 
-          <div class="button-container" *ngIf="i === itemsArray.length - 1">
-            <button mat-mini-fab class="delete-button" (click)="removeItem(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-mini-fab class="add-button" (click)="addItem()">
-              <mat-icon>add</mat-icon>
-            </button>
+            <!-- Products -->
+            <div formArrayName="products" class="mt-3">
+              <div class="row g-3 align-items-end"
+                   *ngFor="let product of getProductsArray(i).controls; let j = index;"
+                   [formGroupName]="j">
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Product</mat-label>
+                    <mat-select formControlName="productId" (selectionChange)="getProductRate(i, j, $event.value)">
+                      <mat-option *ngFor="let prod of productsList[i]()" [value]="prod.productId">
+                        {{ prod.product.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="product.get('productId')?.hasError('required')">
+                      Product is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Quantity</mat-label>
+                    <input matInput type="number" formControlName="quantity" min="1"
+                           (change)="calculateSubtotal(i, j, $event)" />
+                    <mat-error *ngIf="product.get('quantity')?.hasError('required')">
+                      Quantity is required
+                    </mat-error>
+                    <mat-error *ngIf="product.get('quantity')?.hasError('min')">
+                      Quantity must be at least 1
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Rate</mat-label>
+                    <input matInput formControlName="customerRate" readonly />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-2 text-end">
+                  <button mat-mini-fab color="warn" (click)="removeProduct(i, j)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                  <button mat-mini-fab color="primary" (click)="addProduct(i)" *ngIf="j === getProductsArray(i).length - 1">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-        <h3>Final Amount: {{finalAmount()}}</h3>
-    </form>
-  </mat-card-content>
-  <mat-card-actions class="actions">
-    <button mat-raised-button color="primary" type="submit" [disabled]="!orderForm.valid" (click)="placeOrder()">
-      Place Order
-    </button>
-  </mat-card-actions>
-</mat-card>
+        <!-- Final Amount -->
+        <div class="col-12 text-end">
+          <h5 class="fw-bold">Final Amount: ₹{{ finalAmount() }}</h5>
+        </div>
 
-
+        <!-- Submit -->
+        <div class="col-12 text-end">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!orderForm.valid">
+            Place Order
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

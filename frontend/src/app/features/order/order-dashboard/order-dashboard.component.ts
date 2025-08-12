@@ -8,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class OrderDashboardComponent {
 
+  action: string = '';
+
+  getSharedData(event: any) {
+    this.action = event.cancel === true ?   '' : this.action;
+  }
 }

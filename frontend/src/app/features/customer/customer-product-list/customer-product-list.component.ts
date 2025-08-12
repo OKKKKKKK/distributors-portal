@@ -30,4 +30,8 @@ export class CustomerProductListComponent {
       console.error(err);
     }
   }
+
+  deleteCustomerEntry() {
+    
+  }
 }
