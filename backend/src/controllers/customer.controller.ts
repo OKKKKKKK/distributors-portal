@@ -1,140 +1,70 @@
 import { Request, Response } from "express";
-import { ObjectId } from "mongodb";
-import { collections } from "../config/database";
-import { Customer } from "../models/customer";
+import { CustomerModel } from "../models/customer";
+import { asyncHandler } from "../middlewares/asyncHandler";
 
-const handleErrorResponse = (res: Response, error: unknown, defaultMessage: string) => {
-    const message = error instanceof Error ? error.message : defaultMessage;
-    res.status(500).json({ code: 500, message });
-};
+// GET all customers
+export const getAllCustomers = asyncHandler(async (_req: Request, res: Response) => {
+  const customers = await CustomerModel.find().lean();
+  if (!customers.length) {
+    return res.status(404).json({ code: 404, message: "Customer Not Found" });
+  }
+  res.status(200).json(customers);
+});
 
-export const getAllCustomers = async (_req: Request, res: Response) => {
-    try {
-        const customers = await collections?.customers?.find({}).toArray();
-        res.status(200).json(customers);
-    } catch (error) {
-        handleErrorResponse(res, error, "Failed to fetch customers.");
-    }
-};
+// CREATE customer
+export const createCustomer = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.body.name) {
+    return res.status(400).json({ code: 400, message: "Name is required." });
+  }
 
-export const createCustomer = async (req: Request, res: Response) => {
-    try {
-        const customer: Customer = req.body;
-        if (!customer.name) {
-            return res.status(400).json({ code: 400, message: "Name is required." });
-        }
-        const result = await collections?.customers?.insertOne(customer);
-        if (result?.acknowledged) {
-            res.status(201).json({
-                customer,
-                code: 201,
-                message: `Created a new customer: ID ${result.insertedId}.`,
-            });
-        } else {
-            res.status(500).json({ code: 500, message: "Failed to create a new customer." });
-        }
-    } catch (error) {
-        handleErrorResponse(res, error, "Failed to create a new customer.");
-    }
-};
+  const customer = await CustomerModel.create(req.body);
 
-export const getCustomerById = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        if (!ObjectId.isValid(id)) {
-            return res.status(400).json({ code: 400, message: "Invalid customer ID" });
-        }
-        const customer = await collections?.customers?.findOne({ _id: new ObjectId(id) });
-        if (customer) {
-            res.status(200).json(customer);
-        } else {
-            res.status(404).json({ code: 404, message: "Customer not found" });
-        }
-    } catch (error) {
-        handleErrorResponse(res, error, "Failed to fetch customer.");
-    }
-};
+  res.status(201).json({
+    customer,
+    code: 201,
+    message: `Created a new customer: ID ${customer._id}`,
+  });
+});
 
-export const deleteCustomerById = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        if (!ObjectId.isValid(id)) {
-            return res.status(400).json({ code: 400, message: "Invalid customer ID" });
-        }
-        const result = await collections?.customers?.deleteOne({ _id: new ObjectId(id) });
-        if (result?.deletedCount === 1) {
-            res.status(200).json({ code: 200, message: `Successfully deleted customer with ID ${id}` });
-        } else {
-            res.status(404).json({ code: 404, message: "Customer not found" });
-        }
-    } catch (error) {
-        handleErrorResponse(res, error, "Failed to delete customer.");
-    }
-};
+// GET customer by ID
+export const getCustomerById = asyncHandler(async (req: Request, res: Response) => {
+  const customer = await CustomerModel.findById(req.params.id).lean();
 
-export const updateCustomerById = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const updatedCustomer: Partial<Customer> = req.body;
-        if (!ObjectId.isValid(id)) {
-            return res.status(400).json({ code: 400, message: "Invalid customer ID" });
-        }
-        const result = await collections?.customers?.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: updatedCustomer }
-        );
-        if (result?.matchedCount) {
-            if (result.modifiedCount) {
-                res.status(200).json({
-                    code: 200,
-                    message: `Customer with ID ${id} successfully updated.`,
-                });
-            } else {
-                res.status(200).json({
-                    code: 200,
-                    message: `No changes were made to the customer with ID ${id}.`,
-                });
-            }
-        } else {
-            res.status(404).json({ code: 404, message: "Customer not found." });
-        }
-    } catch (error) {
-        handleErrorResponse(res, error, "Failed to update customer.");
-    }
-};
+  if (!customer) {
+    return res.status(404).json({ code: 404, message: "Customer not found" });
+  }
 
-// delete all customers
-// This will also delete associated customer products and orders
-// Ensure you handle this operation with caution as it will remove all customer data.
-export const deleteAllCustomers = async (_req: Request, res: Response) => {
-    try {
-        const [customerResult, productResult, orderResult] = await Promise.all([
-            collections?.customers?.deleteMany({}),
-            collections?.customerProducts?.deleteMany({}),
-            collections?.orders?.deleteMany({})
-        ]);
+  res.status(200).json(customer);
+});
 
-        const totalDeleted = {
-            customers: customerResult?.deletedCount || 0,
-            customerProducts: productResult?.deletedCount || 0,
-            orders: orderResult?.deletedCount || 0
-        };
+// UPDATE customer by ID
+export const updateCustomerById = asyncHandler(async (req: Request, res: Response) => {
+  const updated = await CustomerModel.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  }).lean();
 
-        const nothingDeleted = Object.values(totalDeleted).every(count => count === 0);
+  if (!updated) {
+    return res.status(404).json({ code: 404, message: "Customer not found" });
+  }
 
-        if (nothingDeleted) {
-            return res.status(404).json({
-                code: 404,
-                message: "No data found to delete in customers, customerProducts, or orders."
-            });
-        }
+  res.status(200).json({
+    code: 200,
+    message: `Customer updated successfully`,
+    customer: updated,
+  });
+});
 
-        return res.status(200).json({
-            code: 200,
-            message: "Deletion successful.",
-            deletedCounts: totalDeleted
-        });
-    } catch (error) {
-        handleErrorResponse(res, error, "Failed to delete customer-related data.");
-    }
-};
+// DELETE customer by ID
+export const deleteCustomerById = asyncHandler(async (req: Request, res: Response) => {
+  const deleted = await CustomerModel.findByIdAndDelete(req.params.id).lean();
+
+  if (!deleted) {
+    return res.status(404).json({ code: 404, message: "Customer not found" });
+  }
+
+  res.status(200).json({
+    code: 200,
+    message: `Successfully deleted customer with ID ${req.params.id}`,
+  });
+});
