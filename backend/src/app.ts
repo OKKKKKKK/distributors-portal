@@ -7,9 +7,12 @@ import { customerProductRouter } from "./routes/customer-products.routes";
 import { customerRouter } from "./routes/customer.routes";
 import { orderRouter } from "./routes/order.routes";
 import { invoiceRoute } from "./routes/invoice-routes";
-import { userRouter } from "./routes/auth.routes";
+import { authRouter } from "./routes/auth.routes";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler";
+import { notFound } from "./middlewares/notFound";
+import { requireAuth } from "./middlewares/auth";
+import { userRouter } from "./routes/user.routes";
 
 export const app = express();
 
@@ -23,8 +26,11 @@ app.use("/customers", customerRouter);
 app.use("/customer-products", customerProductRouter);
 app.use("/orders", orderRouter);
 app.use("/invoices", invoiceRoute);
-app.use("/auth", userRouter)
+app.use("/auth", authRouter);
+app.use("/users", userRouter);
 
+
+app.use(notFound);
 
 // global error handler (last)
 app.use(errorHandler);
