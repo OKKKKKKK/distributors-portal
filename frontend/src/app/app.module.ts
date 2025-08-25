@@ -15,20 +15,18 @@ import { DistributorDashboardComponent } from './features/distributor/distributo
 import { ManufacturerDashboardComponent } from './features/manifacturer/manufacturer-dashboard/manufacturer-dashboard.component';
 import { CreateManufacturerComponent } from './features/manifacturer/create-manufacturer/create-manufacturer.component';
 import { ManufacturerListComponent } from './features/manifacturer/manufacturer-list/manufacturer-list.component';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CreateCustomerComponent } from './features/customer/create-customer/create-customer.component';
 import { CustomerProductsComponent } from './features/customer/customer-products/customer-products.component';
 import { CustomerProductListComponent } from './features/customer/customer-product-list/customer-product-list.component';
 import { OrderDashboardComponent } from './features/order/order-dashboard/order-dashboard.component';
-import { importProvidersFrom } from '@angular/core';
-import { ClerkSignInComponent } from "ngx-clerk";
-import { ClerkSignUpComponent } from "ngx-clerk";
-import { ClerkUserProfileComponent } from "ngx-clerk";
-import { ClerkUserButtonComponent } from "ngx-clerk";
-import { ClerkOrganizationProfileComponent } from "ngx-clerk";
-import { ClerkOrganizationSwitcherComponent } from "ngx-clerk";
-import { ClerkOrganizationListComponent } from "ngx-clerk";
-import { ClerkCreateOrganizationComponent } from "ngx-clerk";
+import { authInterceptor } from './shared/interceptors/auth.interceptor';
+import { FooterComponent } from "./shared/components/footer/footer.component";
+import { GuestLayoutComponent } from './nonsecure/guest-layout.component';
+import { AuthLayoutComponent } from './features/auth-layout.component';
+import { LoginComponent } from './nonsecure/login/login.component';
+import { RegisterComponent } from './nonsecure/register/register.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -44,7 +42,11 @@ import { ClerkCreateOrganizationComponent } from "ngx-clerk";
     CustomerProductsComponent,
     CustomerProductListComponent,
     OrderDashboardComponent,
-    CustomerOrderComponent
+    CustomerOrderComponent,
+    GuestLayoutComponent,
+    AuthLayoutComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -58,17 +60,15 @@ import { ClerkCreateOrganizationComponent } from "ngx-clerk";
         // or after 30 seconds (whichever comes first).
         registrationStrategy: 'registerWhenStable:30000'
     }),
-    ClerkSignInComponent,
-    ClerkSignUpComponent,
-    ClerkUserProfileComponent,
-    ClerkUserButtonComponent,
-    ClerkOrganizationProfileComponent,
-    ClerkOrganizationSwitcherComponent,
-    ClerkOrganizationListComponent,
-    ClerkCreateOrganizationComponent
+    FooterComponent
 ],
   providers: [
-    provideHttpClient()
+    provideHttpClient(withInterceptors([authInterceptor]))
+  ],
+  exports: [
+    NavbarComponent,
+    MaterialModule,
+    MatTableModule
   ],
   bootstrap: [AppComponent]
 })

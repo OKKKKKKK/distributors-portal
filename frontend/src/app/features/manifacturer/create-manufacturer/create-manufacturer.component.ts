@@ -36,7 +36,7 @@ export class CreateManufacturerComponent implements OnInit {
   addProduct(): void {
     const productGroup = this.fb.group({
       name: ['', Validators.required],
-      distributorsRate: ['', Validators.required],
+      distributorRate: ['', Validators.required],
       rate: ['', Validators.required]
     });
 
@@ -62,7 +62,7 @@ export class CreateManufacturerComponent implements OnInit {
     const mrp = parseFloat(target.value);
     const percentage = this.manufacturerForm.get('marginPercentage')?.value || 0;
     const distributorRate = calculatePercentageMargin(mrp, percentage);
-    this.productsArray.at(i).get('distributorsRate')?.setValue(distributorRate);
+    this.productsArray.at(i).get('distributorRate')?.setValue(distributorRate);
   }
 
    cancel() {

@@ -1,37 +1,75 @@
-<!-- manufacturer-list.component.html -->
-<h3>Manufacturers: </h3>
-<div class="manufacturer-list">
-  <mat-accordion>
-    <mat-expansion-panel *ngFor="let manufacturer of manufacturers$()">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ manufacturer.name }}
-        </mat-panel-title>
-        <div class="d-flex">
-          <mat-panel-title>
-            <mat-icon (click)="$event.stopPropagation()">edit</mat-icon>
-          </mat-panel-title>
-          <mat-panel-title>
-          <mat-icon (click)="$event.stopPropagation()">delete</mat-icon>
-          </mat-panel-title>
-          </div>
-      </mat-expansion-panel-header>
-      <div class="products-list">
-        <table mat-table [dataSource]="manufacturer.products">
+<table mat-table [dataSource]="manufacturers$()" multiTemplateDataRows class="mat-elevation-z8 full-width">
+
+  <!-- Manufacturer Name -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Manufacturer Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <!-- Margin Percentage -->
+  <ng-container matColumnDef="marginPercentage">
+    <th mat-header-cell *matHeaderCellDef> Margin % </th>
+    <td mat-cell *matCellDef="let element"> {{element.marginPercentage}}% </td>
+  </ng-container>
+
+  <!-- Outstanding -->
+  <ng-container matColumnDef="outstanding">
+    <th mat-header-cell *matHeaderCellDef> Outstanding </th>
+    <td mat-cell *matCellDef="let element"> {{element.outstanding}} </td>
+  </ng-container>
+
+  <!-- Expand Button -->
+  <ng-container matColumnDef="expand">
+    <th mat-header-cell *matHeaderCellDef> Action </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="toggle(element); $event.stopPropagation()"
+              [class.expanded]="isExpanded(element)">
+        <mat-icon>{{isExpanded(element) ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <!-- Expanded Row for Products Table -->
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+      <div *ngIf="isExpanded(element)" class="child-table-wrapper">
+        @if (element.products.length > 0) {
+        <table mat-table [dataSource]="element.products" class="mat-elevation-z1 child-table">
+
+          <!-- Product Name -->
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Product Name </th>
-            <td mat-cell *matCellDef="let product"> {{ product.name }} </td>
+            <td mat-cell *matCellDef="let product"> {{product.name}} </td>
           </ng-container>
 
+          <!-- Rate -->
           <ng-container matColumnDef="rate">
             <th mat-header-cell *matHeaderCellDef> Rate </th>
-            <td mat-cell *matCellDef="let product"> {{ product.rate | currency }} </td>
+            <td mat-cell *matCellDef="let product"> {{product.rate}} </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <!-- Distributor Rate -->
+          <ng-container matColumnDef="distributorRate">
+            <th mat-header-cell *matHeaderCellDef> Distributor Rate </th>
+            <td mat-cell *matCellDef="let product"> {{product.distributorRate}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="productColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: productColumns;"></tr>
         </table>
+      } @else {
+        <div class="no-products-message">
+          No products available for this manufacturer.
+        </div>
+      }
       </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>
+    </td>
+  </ng-container>
+
+  <!-- Main Table Rows -->
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+  <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" class="parent-row"
+      (click)="toggle(element)"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="expanded-row" [hidden]="!isExpanded(row)"></tr>
+
+</table>

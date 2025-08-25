@@ -1,41 +1,75 @@
+/* =======================================
+   Angular Global Styles (Refactored)
+   Using Angular Material + Bootstrap
+========================================== */
+
 @use "@angular/material" as mat;
 
-@import "./styles-mat-overrides.scss";
-@import "../src/assets/sass/init.scss";
-
-@import "bootstrap/scss/bootstrap";
+@use "./styles-mat-overrides.scss" as *;
+@use "assets/sass/init.scss" as *;
+@use "bootstrap/scss/bootstrap" as *;
 
 @include mat.core();
+
+/* ------------ CSS Reset + Base ------------ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 html,
 body {
   height: 100%;
-  font-size: 0.8333333333vw !important;
-}
-body {
-  margin: 0;
+  width: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  font-weight: normal;
+  font-weight: 400;
   color: #5a5a5a;
-  line-height: 1 !important;
-  overflow: hidden;
+  background-color: #fff;
+  font-size: 0.85vw;
+  line-height: 1.4;
+  overflow-x: hidden; /* prevent horizontal scroll */
 }
 
-.bold {
-  font-weight: 500;
+body {
+  display: flex;
+  flex-direction: column;
 }
-.bg-white {
-  background-color: #fff;
+
+/* ------------ Layout Wrapper ------------ */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+}
+
+app-navbar {
+  flex-shrink: 0; /* fixed height */
+}
+
+main,
+router-outlet {
+  flex: 1;
+  display: block;
+  overflow-y: auto; /* scroll only when required */
+}
+
+/* ------------ Typography Helpers ------------ */
+.bold {
+  font-weight: 600;
+}
+.text-gray {
+  color: var(--text_secondary, #777);
 }
 .text-danger {
-  color: var(--danger);
+  color: var(--danger, #dc3545);
 }
 
-/* Common styles start */
-
-.text-gray {
-  color: var(--text_secondary);
-}
+/* ------------ Utility Classes ------------ */
 .w-100 {
   width: 100% !important;
 }
@@ -73,23 +107,19 @@ body {
   padding-left: 1rem !important;
 }
 .br-0 {
-  border: 0px !important;
+  border: 0 !important;
 }
-/* Common styles end */
 
-/* scroll bar design start */
-
-/* width */
+/* ------------ Scrollbar Styling ------------ */
 ::-webkit-scrollbar {
-  width: 0.4375rem;
+  width: 0.4rem;
 }
-
-/* Handle */
 ::-webkit-scrollbar-thumb {
-  background: grey;
-  border-radius: 0.625rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 0.6rem;
 }
 
+/* ------------ Material Overrides ------------ */
 .code-container {
   .mat-list-base .mat-list-item,
   .mat-list-base .mat-list-option {
@@ -97,175 +127,64 @@ body {
   }
 }
 
-/* scroll bar design end */
-
-/* Media queries for responsive design */
-/* Mobile portrait view */
-@media only screen and (min-width: 350px) and (max-width: 480px) and (orientation: portrait) {
-  html,
-  body {
-    font-size: 12px !important;
-    .mat-form-field {
-      font-size: 1rem;
-    }
-    .toolbar {
-      padding: 1rem !important;
-    }
-    .content {
-      height: calc(100vh - 20rem) !important;
-      padding-top: 0rem !important;
-      align-items: center;
-      .code-container {
-        height: auto !important;
-        position: relative !important;
-        .image-holder {
-          position: absolute;
-          left: -4.3rem;
-          top: -5rem;
-        }
-        .field-box {
-          margin-left: 3rem !important;
-          width: 24.5rem !important;
-          .field-container {
-            .form-container {
-              width: auto !important;
-              height: auto !important;
-              padding: 0rem !important;
-              border: 0 !important;
-            }
-          }
-          .list-view {
-            max-height: 9rem !important;
-          }
-        }
-      }
-    }
-  }
+.spacer {
+  flex: 1 1 auto;
 }
 
-/* Mobile landscape view */
-@media only screen and (min-width: 480px) and (max-width: 800px) and (orientation: landscape) {
-  html,
-  body {
-    font-size: 15px !important;
-    .toolbar {
-      padding: 0.125rem 1rem !important;
-      height: 3.25rem !important;
-    }
-    .content {
-      height: calc(100vh - 7rem) !important;
-      padding-top: 0rem !important;
-      .code-container {
-        height: 52vh !important;
-        .image-holder {
-          img {
-            width: 4rem !important;
-          }
-        }
-        .field-box {
-          height: auto !important;
-          width: 25.5rem !important;
-          margin-left: 5rem !important;
-          .field-container {
-            .title {
-              font-size: 0.85rem !important;
-            }
-            .form-container {
-              width: auto !important;
-              height: auto !important;
-              padding: 0 !important;
-              border: 0 !important;
-              .list-view {
-                max-height: 8.8rem !important;
-              }
-              mat-list-item {
-                height: 2rem !important;
-                .mat-radio-label-content {
-                  font-size: 0.8rem !important;
-                }
-              }
-            }
-          }
-          .field-heading {
-            font-size: 1.25em !important;
-          }
-          .mat-form-field {
-            font-size: 0.6rem !important;
-          }
-        }
-      }
-    }
-    .btn {
-      height: 1.7rem !important;
-      font-size: 0.675em !important;
-    }
-  }
-}
-
-/* iPad Portrait */
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) and (orientation: portrait) {
-  /* CSS for iPad in portrait mode */
-  html,
-  body {
-    font-size: 1.4vw !important;
-    .code-container {
-      height: 70vh !important;
-      .form-container {
-        height: auto !important;
-      }
-    }
-  }
-}
-
-/* ipad landscape view */
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) and (orientation: landscape) {
-  html,
-  body {
-    font-size: 1.4vw !important;
-    .content {
-      height: calc(100vh - 14.2rem) !important;
-      align-content: center;
-      padding-top: 0 !important;
-      .code-container {
-        height: 74vh !important;
-        .field-box {
-          .field-container {
-            .form-container {
-              height: auto !important;
-              .list-view {
-                max-height: 10.5rem !important;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-.file-item {
+.footer {
+  width: 100%;
   display: flex;
-  align-items: center;
-  margin-top: 0.3125rem;
-  padding: 0.3125rem;
-  border-radius: 0.3125rem;
-  width: fit-content;
-  box-sizing: border-box;
-  justify-content: space-between;
+  justify-content: center;
 }
-.name-extension {
-  max-width: 6rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0 0.5rem;
+
+/* ------------ Responsive Media Queries ------------ */
+
+/* Mobile Portrait */
+@media (max-width: 480px) {
+  html {
+    font-size: 12px;
+  }
+
+  .toolbar {
+    padding: 0.75rem;
+  }
+  main {
+    padding: 0.5rem;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+    height: 2rem;
+  }
+}
+
+/* Mobile Landscape */
+@media (min-width: 480px) and (max-width: 800px) and (orientation: landscape) {
+  html {
+    font-size: 14px;
+  }
+  .toolbar {
+    height: 3rem;
+    padding: 0.25rem 1rem;
+  }
+  main {
+    padding: 0.75rem;
+  }
+}
+
+/* Tablet / iPad Portrait */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  html {
+    font-size: 1.2vw;
+  }
+  main {
+    padding: 1rem;
+  }
+}
+
+/* Tablet / iPad Landscape */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  html {
+    font-size: 1.1vw;
+  }
 }

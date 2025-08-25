@@ -21,13 +21,14 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/manufacturers", manufacturerRouter);
-app.use("/customers", customerRouter);
-app.use("/customer-products", customerProductRouter);
-app.use("/orders", orderRouter);
-app.use("/invoices", invoiceRoute);
+app.use("/manufacturers", requireAuth, manufacturerRouter);
+// app.use("/products", requireAuth, productRouter);
+app.use("/customers", requireAuth, customerRouter);
+app.use("/customer-products", requireAuth, customerProductRouter);
+app.use("/orders", requireAuth, orderRouter);
+app.use("/invoices", requireAuth, invoiceRoute);
 app.use("/auth", authRouter);
-app.use("/users", userRouter);
+app.use("/users", requireAuth, userRouter);
 
 
 app.use(notFound);

@@ -77,7 +77,7 @@ export class CustomerProductsComponent implements OnInit {
   fetchCustomers() {
     this.customers = this.customerService.customers$;
     console.log(this.customers);
-    this.customerService.getcustomers();
+    this.customerService.getCustomers();
   }
 
   fetchManufacturers() {
@@ -85,13 +85,13 @@ export class CustomerProductsComponent implements OnInit {
     // this.products = this.manufacturers
     console.log(this.manufacturers());
     this.manuService.getManufacturers();
-    this.customerProductForm.get('manufacturerId')?.valueChanges.subscribe(el=>{
+    /* this.customerProductForm.get('manufacturerId')?.valueChanges.subscribe(el=>{
       if(el) {
         const products = this.manufacturers().find(item => item._id === el)?.products as Product[];
         this.products.set(products);
         console.log(this.products());
       }
-    })
+    }) */
   }
 
   calculateRate(index: number, value: any): void {

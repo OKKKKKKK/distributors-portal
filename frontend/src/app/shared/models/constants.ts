@@ -1,9 +1,16 @@
+export interface Manufacturer {
+  _id: string;
+  name: string;
+  outstanding: number;
+  marginPercentage: number;
+  products: Product[]
+}
 export interface Product {
   name: string;
-  clientRate: number;
+  rate: number;
   manufacturerId: string;
   _id: string;
-  clientProduct: clientProduct;
+  distributorRate: number;
 }
 
 export interface clientProduct {
@@ -11,12 +18,7 @@ export interface clientProduct {
   rate: number;
   _id: string;
 }
-export interface Manufacturer {
-  name: string;
-  outstanding: number;
-  products: Product[];
-  _id: string;
-}
+
 
 export interface Customer {
   _id: string;
@@ -35,9 +37,7 @@ export interface productReference {
 
 export interface CustomerProducts {
   _id: string;
-  customerId: string;
   customerInfo: Customer;
-  manufacturerId: string;
   manufacturerInfo: Manufacturer;
   products: productReference[]
 }
@@ -56,7 +56,7 @@ export interface Order {
   _id: string;
   customerId: string;
   date: string; // ISO string date
-  name: string; // name of the customer or order (e.g., "Alpana Foods")
+  name: string;
   finalAmount: number;
   status: string; // Possible values: "Pending", "Completed", "Cancelled"
   items: OrderItem[];

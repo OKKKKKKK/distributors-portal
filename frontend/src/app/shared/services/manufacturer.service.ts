@@ -7,27 +7,32 @@ import { Manufacturer } from '../models/constants';
   providedIn: 'root'
 })
 export class ManufacturerService {
-  
   private url = 'http://localhost:3000';
-  manufacturers$ = signal<Manufacturer[]>([]);
-  manufacturer$ = signal<Manufacturer>({} as Manufacturer);
+
+  // Signals for state
+  readonly manufacturers$ = signal<Manufacturer[]>([]);
+  readonly manufacturer$ = signal<Manufacturer | null>(null);
+  readonly loading$ = signal(false);
+  readonly error$ = signal<string | null>(null);
 
   constructor(private httpClient: HttpClient) {}
 
-  private refresh() {
+  getManufacturers() {
+    this.loading$.set(true);
     this.httpClient.get<Manufacturer[]>(`${this.url}/manufacturers`)
-      .subscribe(manufacturer => {
-        this.manufacturers$.set(manufacturer);
+      .subscribe({
+        next: (data) => {
+          this.manufacturers$.set(data);
+          this.loading$.set(false);
+        },
+        error: (err) => {
+          this.error$.set(err.message || 'Error fetching manufacturers');
+          this.loading$.set(false);
+        }
       });
   }
 
-  getManufacturers() {
-    this.refresh();
-    return this.manufacturers$();
-  }
-
   createManufacturer(manufacturer: Manufacturer) {
-    console.log(manufacturer);
-    return this.httpClient.post(`${this.url}/manufacturers`, manufacturer, { responseType: 'text' });
+    return this.httpClient.post(`${this.url}/manufacturers`, manufacturer);
   }
 }

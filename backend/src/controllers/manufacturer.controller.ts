@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { Manufacturer, ManufacturerModel } from "../models/manufacturer";
 import { asyncHandler } from "../middlewares/asyncHandler";
+import { Product, ProductModel } from "../models/product";
 
 const handleErrorResponse = (
   res: Response,
@@ -14,21 +15,28 @@ const handleErrorResponse = (
 };
 
 // get all manufacturers
-export const getManufacturers = async (req: Request, res: Response) => {
-  try {
+export const getManufacturers = asyncHandler(
+  async (req: Request, res: Response) => {
     const manufacturers = await ManufacturerModel.find().lean();
-
-    if (manufacturers.length === 0) {
+    if (!manufacturers || manufacturers.length === 0) {
       return res
         .status(404)
         .json({ code: 404, message: "No manufacturers found" });
     }
-
-    res.status(200).json(manufacturers);
-  } catch (error) {
-    handleErrorResponse(res, error, "Failed to fetch manufacturers.");
+    console.log("manufacturers", manufacturers);
+   const result = await Promise.all(
+    manufacturers.map(async (el) => {
+      const products = await ProductModel.find({ manufacturerId: el._id }).lean();
+      return {
+        ...el,
+        products: products || []
+      };
+    })
+  );
+    console.log("result", result);
+    res.status(200).json(result);
   }
-};
+);
 
 // manufacturer by ID
 export const getManufacturerById = asyncHandler(
@@ -53,18 +61,28 @@ export const getManufacturerById = asyncHandler(
 // create a new manufacturer
 export const createManufacturer = asyncHandler(
   async (req: Request, res: Response) => {
-    const manufacturer: Manufacturer = req.body;
-    if (manufacturer?.products?.length) {
-      manufacturer.products = manufacturer?.products.map((product) => ({
-        ...product,
-        _id: new ObjectId(),
+    const { name, marginPercentage, outstanding, products } = req.body;
+    const manufacturer = await ManufacturerModel.create({
+      name,
+      outstanding,
+      marginPercentage,
+    });
+
+    let createdProducts: any[] = [];
+    if (products && products.length > 0) {
+      const productWithManufacturer = products.map((res: any) => ({
+        ...res,
+        manufacturerId: manufacturer._id,
       }));
+
+      createdProducts = await ProductModel.insertMany(productWithManufacturer);
     }
-    const result = await ManufacturerModel.create(manufacturer);
+
     res.status(201).send({
       manufacturer: manufacturer,
+      products: createdProducts,
       code: 201,
-      message: `Created a new manufacturer: ID ${result._id}.`,
+      message: `Created manufacturer ${manufacturer.name} with ${createdProducts.length} products.`,
     });
   }
 );
@@ -118,5 +136,20 @@ export const deleteManufacturerById = asyncHandler(
     } catch (error) {
       handleErrorResponse(res, error, "Failed to delete manufacturer.");
     }
+  }
+);
+
+export const getAllProductsByManufacturerId = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { manufacturerId } = req.params; // use params for RESTful GET
+
+    if (!manufacturerId) {
+      res.status(400);
+      throw new Error("manufacturerId is required");
+    }
+
+    const products = await ProductModel.find({ manufacturerId }).lean();
+
+    res.status(200).json(products);
   }
 );

@@ -1,32 +1,37 @@
-<mat-card class="card-container mb-5">
+<mat-card class="card-container mb-5 shadow rounded-3">
   <mat-card-header>
-    <mat-card-title>Create Customer</mat-card-title>
+    <mat-card-title class="fw-bold fs-5">Create Customer</mat-card-title>
   </mat-card-header>
+
   <mat-card-content>
-    <form
-      class="customer-container"
-      [formGroup]="customerForm"
-    >
-      <div class="row-1">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>customer Name</mat-label>
+    <form [formGroup]="customerForm" class="row g-3">
+      <!-- Row 1 -->
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Customer Name</mat-label>
           <input matInput formControlName="name" />
           <mat-error *ngIf="customerForm.get('name')?.hasError('required')">
-            customer Name is required
+            Customer Name is required
           </mat-error>
         </mat-form-field>
+      </div>
 
-        <mat-form-field appearance="outline" class="full-width">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Address</mat-label>
           <input matInput formControlName="address" />
         </mat-form-field>
+      </div>
 
-        <mat-form-field appearance="outline" class="full-width">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Outstanding Amount</mat-label>
           <input matInput type="number" formControlName="outstanding" />
         </mat-form-field>
-        <!-- create a form field to add margin percentage -->
-        <mat-form-field appearance="outline" class="full-width">
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Margin Percentage</mat-label>
           <input
             matInput
@@ -43,11 +48,96 @@
           >
             Margin Percentage must be between 0 and 100
           </mat-error>
-          </mat-form-field>
+        </mat-form-field>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Manufacturer</mat-label>
+          <mat-select formControlName="manufacturerId">
+            @for (manufacturer of manufacturers$(); track manufacturer) {
+            <mat-option [value]="manufacturer._id">{{
+              manufacturer.name
+            }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Products Array -->
+      <div
+        formArrayName="customerProducts"
+        class="col-12"
+        *ngFor="
+          let productGroup of productsArray.controls;
+          let i = index;
+          let last = last
+        "
+      >
+        <div [formGroupName]="i" class="mb-3">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Product</mat-label>
+                <mat-select
+                  formControlName="productId"
+                  (selectionChange)="getRate($event, i)"
+                >
+                  @for (product of products$(); track product) {
+                  <mat-option [value]="product._id">{{
+                    product.name
+                  }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-3 text-muted">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>MRP</mat-label>
+                <input matInput formControlName="mrp" readonly />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Customer Rate</mat-label>
+                <input matInput type="number" formControlName="customerRate" />
+                <mat-error
+                  *ngIf="productGroup.get('customerRate')?.hasError('required')"
+                >
+                  Rate is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-1 d-flex justify-content-end">
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="removeProduct(i)"
+                aria-label="Remove product"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Add button only after last row -->
+          @if (last) {
+          <div class="d-flex justify-content-end mt-2">
+            <button mat-mini-fab color="primary" (click)="addProduct()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          }
+        </div>
       </div>
     </form>
   </mat-card-content>
-  <mat-card-actions class="m-2 gap-2 actions">
+
+  <mat-card-actions class="d-flex justify-content-end gap-2 px-3 pb-3">
     <button
       mat-raised-button
       color="primary"
@@ -57,12 +147,7 @@
     >
       Save
     </button>
-    <button
-    mat-stroked-button
-      color="primary"
-      type="button"
-      (click)="cancel()"
-    >
+    <button mat-stroked-button color="warn" type="button" (click)="cancel()">
       Cancel
     </button>
   </mat-card-actions>

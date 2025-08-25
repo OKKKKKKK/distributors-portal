@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import mongoose, { Types } from "mongoose";
 import { asyncHandler } from "../middlewares/asyncHandler";
-import { CustomerProductModel } from "../models/customer";
+// import { CustomerProductModel, PopulatedCustomerProduct } from "../models/customer";
+import { Manufacturer } from "../models/manufacturer";
 
 // Create a new customer product
-export const createCustomerProduct = asyncHandler(async (req: Request, res: Response) => {
+/* export const createCustomerProduct = asyncHandler(async (req: Request, res: Response) => {
   const { customerId, manufacturerId, products } = req.body;
 
   if (!customerId || !manufacturerId || !products || products.length === 0) {
@@ -36,10 +37,35 @@ export const createCustomerProduct = asyncHandler(async (req: Request, res: Resp
 // Get all customer products with populated details
 export const getAllCustomerProducts = asyncHandler(async (_req: Request, res: Response) => {
   const customerProducts = await CustomerProductModel.find()
-    .populate("customerId") // Populate customer details
-    .populate("manufacturerId"); // Populate manufacturer details
+    .populate("customerId")
+    .populate({
+      path: "products.productId",          // populate product info
+      populate: { path: "manufacturerId" } // and also populate manufacturer inside product
+    })
+    .lean();
 
-  res.status(200).json(customerProducts);
+  const result = customerProducts.map(({ customerId, products, ...rest }) => {
+    const enrichedProducts = products.map((p: any) => {
+      const product = p.productId; // populated Product doc
+      return {
+        _id: p._id, // keep subdoc id
+        productId: product?._id,
+        productName: product?.name ?? p.productName,
+        customRate: p.rate ?? null, // customer-specific rate
+        mrp: product?.rate ?? null, // base product MRP
+        distributorRate: product?.distributorRate ?? null,
+        manufacturer: product?.manufacturerId ?? null
+      };
+    });
+
+    return {
+      ...rest,
+      products: enrichedProducts,
+      customerInfo: customerId
+    };
+  });
+
+  res.status(200).json(result);
 });
 
 // Get customer products by customer ID
@@ -61,4 +87,4 @@ export const getCustomerProductsByCustomerId = asyncHandler(async (req: Request,
   }
 
   res.status(200).json(customerProducts);
-});
+}); */

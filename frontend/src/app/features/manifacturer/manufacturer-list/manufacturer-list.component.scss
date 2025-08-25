@@ -1,0 +1,35 @@
+/* Make numeric/action columns right-aligned */
+:host ::ng-deep .mat-mdc-table {
+  table-layout: fixed;
+}
+
+/* Right-align specific columns */
+:host ::ng-deep .mat-column-outstanding,
+:host ::ng-deep .mat-column-marginPercentage,
+:host ::ng-deep .mat-column-actions,
+:host ::ng-deep .mat-column-expand {
+  text-align: right;
+}
+
+/* Set widths so actions/expand sit flush right neatly */
+:host ::ng-deep .mat-column-actions {
+  width: 110px;
+  white-space: nowrap;
+}
+:host ::ng-deep .mat-column-expand {
+  width: 56px;
+}
+
+/* Detail row visuals */
+.detail-row {
+  background: #fafafa;
+}
+.detail-wrapper {
+  padding: 12px 8px 16px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Optional: improve header spacing */
+:host ::ng-deep th.mat-mdc-header-cell {
+  padding-right: 12px;
+}

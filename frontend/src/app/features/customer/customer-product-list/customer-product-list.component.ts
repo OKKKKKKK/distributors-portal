@@ -1,37 +1,45 @@
-import { Component, EventEmitter, Signal, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Signal,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { CustomerProducts } from 'src/app/shared/models/constants';
 import { CustomerService } from 'src/app/shared/services/customer.service';
 
 @Component({
-    selector: 'app-customer-product-list',
-    templateUrl: './customer-product-list.component.html',
-    styleUrl: './customer-product-list.component.scss',
-    standalone: false
+  selector: 'app-customer-product-list',
+  templateUrl: './customer-product-list.component.html',
+  styleUrl: './customer-product-list.component.scss',
+  standalone: false,
 })
 export class CustomerProductListComponent {
+  columnsToDisplay: string[] = ['name', 'outstanding', 'marginPercentage'];
+  columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
+  productColumns: string[] = ['name', 'rate', 'distributorRate', 'customerRate'];
 
-  displayedColumns: string[] = ['name', 'clientRate', 'MRP', 'distributorRate'];
-  customerProducts$ = signal<CustomerProducts[]>([]);
-  test = signal<CustomerProducts[]>([]);
+  expandedElement: any | null = null;
+  displayedColumns: string[] = ['name', 'clientRate', 'MRP', 'distributorRate', 'customerRate'];
+  customerProducts$ = this.customerService.customers$;
+  loading$ = this.customerService.loading$;
+  error$ = this.customerService.error$;
 
   constructor(private customerService: CustomerService) {}
 
   ngOnInit(): void {
     this.getCustomerProducts();
   }
-  
-  async getCustomerProducts() {
-    try {
-      await this.customerService.getCustomerProduct();
-      this.customerProducts$ = this.customerService.customerProducts$;
-      console.log(this.customerProducts$());
-    }
-    catch(err) {
-      console.error(err);
-    }
+
+  getCustomerProducts() {
+    this.customerService.getCustomers();
   }
 
-  deleteCustomerEntry() {
-    
+  deleteCustomerEntry() {}
+
+  toggle(el: any) {
+    this.expandedElement = this.expandedElement === el ? null : el;
   }
+
+  isExpanded = (row: any, index?: number) => this.expandedElement === row;
 }

@@ -11,23 +11,39 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class CustomerService {
   
   private url = 'http://localhost:3000';
-  customers$ = signal<Customer[]>([]);
-  customer$ = signal<Customer>({} as Customer);
+  readonly customers$ = signal<Customer[]>([]);
+  readonly customer$ = signal<Customer>({} as Customer);
+  readonly loading$ = signal(false);
+  readonly error$ = signal<string | null>('');
   customerProducts$ = signal<CustomerProducts[]>([]);
 
   constructor(private httpClient: HttpClient) {}
 
-  private refresh() {
+  /* private refresh() {
     this.httpClient.get<Customer[]>(`${this.url}/customers`)
       .subscribe(customer => {
         this.customers$.set(customer);
       });
-  }
+  } */
 
-  getcustomers() {
+  getCustomers() {
+      this.httpClient.get<Customer[]>(`${this.url}/customers`)
+        .subscribe({
+          next: (data) => {
+            this.customers$.set(data);
+            this.loading$.set(false);
+          },
+          error: (err) => {
+            this.error$.set(err.message || 'Error fetching customers');
+            this.loading$.set(false);
+          }
+        });
+    }
+
+  /* getcustomers() {
     this.refresh();
     return this.customers$();
-  }
+  } */
 
   createcustomer(customer: Partial<Customer>): Promise<any> {
     const customer$ =

@@ -90,11 +90,11 @@ export class CustomerOrderComponent implements OnInit {
       if (customerId) {
         // Get manufacturerIds linked to this customer
         const customerProductList = this.customerProducts$().filter(
-          (cp) => cp.customerId === customerId
+          (cp) => cp._id === customerId
         );
 
         const allowedManufacturerIds = new Set(
-          customerProductList.map((cp) => cp.manufacturerId)
+          customerProductList.map((cp) => cp._id)
         );
 
         // Filter from all manufacturers
@@ -116,7 +116,7 @@ export class CustomerOrderComponent implements OnInit {
   }
 
   loadCustomers() {
-    this.customerService.getcustomers();
+    this.customerService.getCustomers();
     this.customers = this.customerService.customers$;
   }
 

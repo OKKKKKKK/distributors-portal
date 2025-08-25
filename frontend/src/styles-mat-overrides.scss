@@ -1,4 +1,4 @@
-@import "../src/assets/sass/init.scss";
+@use "assets/sass/init.scss" as *;
 
 .mat-mdc-form-field-infix {
   min-height: 40px !important;

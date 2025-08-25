@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="sidenav.toggle()">
+  <!-- <button mat-icon-button (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
-  </button>
+  </button> -->
   <span>Distributors Portal</span>
   <span class="spacer"></span>
   <nav *ngIf="!(isHandset$ | async)">
@@ -10,9 +10,10 @@
     <button mat-button routerLink="/manufacturer">Manufacturer</button>
     <button mat-button routerLink="/order">Orders</button>
     <button mat-button routerLink="/invoice">Invoice</button>
+    <button mat-button (click)="logout()">Logout</button>
   </nav>
 </mat-toolbar>
-<mat-sidenav-container>
+<!-- <mat-sidenav-container>
   <mat-sidenav #sidenav mode="over" [opened]="false" (closedStart)="onClose()">
     <mat-nav-list>
       <a mat-list-item routerLink="/" (click)="sidenav.close()"></a>
@@ -32,4 +33,4 @@
   <mat-sidenav-content>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
-</mat-sidenav-container>
+</mat-sidenav-container> -->

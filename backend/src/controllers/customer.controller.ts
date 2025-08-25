@@ -4,7 +4,9 @@ import { asyncHandler } from "../middlewares/asyncHandler";
 
 // GET all customers
 export const getAllCustomers = asyncHandler(async (_req: Request, res: Response) => {
-  const customers = await CustomerModel.find().lean();
+  const customers = await CustomerModel.find()
+  .populate("customerProducts.productId")
+  .lean();
   if (!customers.length) {
     return res.status(404).json({ code: 404, message: "Customer Not Found" });
   }
@@ -68,3 +70,7 @@ export const deleteCustomerById = asyncHandler(async (req: Request, res: Respons
     message: `Successfully deleted customer with ID ${req.params.id}`,
   });
 });
+
+export const getAllCustomerProducts = asyncHandler(async (req: Request, res: Response) => {
+
+})
