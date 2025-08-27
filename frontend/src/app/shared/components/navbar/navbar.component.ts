@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-navbar',
@@ -11,7 +12,9 @@ import { Router } from '@angular/router';
     standalone: false
 })
 export class NavbarComponent implements OnInit {
+  
   isHandset$: Observable<boolean> | undefined;
+  authService = inject(AuthService);
 
   constructor(private breakpointObserver: BreakpointObserver, private router: Router) {}
 
@@ -25,11 +28,9 @@ export class NavbarComponent implements OnInit {
   }
 
   onClose() {
-
   }
 
   logout() {
-    localStorage.removeItem('token');  
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 }

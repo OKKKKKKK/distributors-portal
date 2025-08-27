@@ -5,6 +5,9 @@ export interface Manufacturer {
   marginPercentage: number;
   products: Product[]
 }
+
+export type CreateManufacturer = Omit<Manufacturer, '_id'>;
+export type UpdateManufacturer = Partial<Manufacturer>;
 export interface Product {
   name: string;
   rate: number;
@@ -74,6 +77,24 @@ export interface ProductItem {
   quantity: number;
   rate: number;
   subTotal: number;
+}
+
+export interface User { 
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: 'customer' | 'admin' | 'manufacturer'
+}
+export type CreateUser = Omit<User, '_id'>
+export type UpdateUser = Partial<User>; 
+
+export interface ApiResponse<T> {
+  status?: number;
+  code?: number;
+  message: string;
+  data?: T;
+  data2?: T
 }
 
 /* 

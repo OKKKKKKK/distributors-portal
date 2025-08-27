@@ -1,31 +1,56 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  effect,
+  EventEmitter,
+  inject,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { calculatePercentageMargin } from 'src/app/shared/commonFunctions';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
 import { SharedData } from '../../customer/customer-products/customer-products.component';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { Product } from 'src/app/shared/models/constants';
 
 @Component({
-    selector: 'app-create-manufacturer',
-    templateUrl: './create-manufacturer.component.html',
-    styleUrls: ['./create-manufacturer.component.scss'],
-    standalone: false
+  selector: 'app-create-manufacturer',
+  templateUrl: './create-manufacturer.component.html',
+  styleUrls: ['./create-manufacturer.component.scss'],
+  standalone: false,
 })
 export class CreateManufacturerComponent implements OnInit {
-  manufacturerForm!: FormGroup;
+  snackbarService = inject(SnackbarService);
+  manufacturerService = inject(ManufacturerService);
+  fb = inject(FormBuilder);
 
-    @Output() shareData = new EventEmitter<SharedData>();
-  
+  submitted$ = signal(false);
 
-  constructor(private fb: FormBuilder, private manufacturerService: ManufacturerService) {}
+  @Output() shareData = new EventEmitter<SharedData>();
+
+  manufacturerForm = this.fb.nonNullable.group({
+    name: ['', Validators.required],
+    outstanding: [0],
+    marginPercentage: [0, Validators.required],
+    products: this.fb.nonNullable.array([] as Product[]),
+  });
+
+  constructor() {
+    effect(() => {
+      if (!this.submitted$()) return;
+      const manufacturer = this.manufacturerService.manufacturer$();
+      console.log(manufacturer);
+      if (manufacturer) {
+        this.snackbarService.show(manufacturer.message);
+        this.manufacturerService.getManufacturers();
+        this.submitted$.set(false);
+        this.cancel();
+      }
+    });
+  }
 
   ngOnInit(): void {
-    this.manufacturerForm = this.fb.group({
-      name: ['', Validators.required],
-      outstanding: [0],
-      marginPercentage: [0, Validators.required],
-      products: this.fb.array([]),
-    });
-
     this.addProduct();
   }
 
@@ -34,10 +59,10 @@ export class CreateManufacturerComponent implements OnInit {
   }
 
   addProduct(): void {
-    const productGroup = this.fb.group({
+    const productGroup = this.fb.nonNullable.group({
       name: ['', Validators.required],
       distributorRate: ['', Validators.required],
-      rate: ['', Validators.required]
+      rate: ['', Validators.required],
     });
 
     this.productsArray.push(productGroup);
@@ -49,23 +74,24 @@ export class CreateManufacturerComponent implements OnInit {
 
   saveManufacturer(): void {
     console.log(this.manufacturerForm);
-    if (this.manufacturerForm.valid) {
-      const manufacturerData = this.manufacturerForm.value;
-      this.manufacturerService.createManufacturer(manufacturerData).subscribe(res=>{
-        console.log(res);
-      })
+    if (this.manufacturerForm.invalid) {
+      return;
     }
+    this.submitted$.set(true);
+    const manufacturerData = this.manufacturerForm.getRawValue();
+    this.manufacturerService.createManufacturer(manufacturerData);
   }
 
   calculateDistributorRate(i: number, event: Event): void {
     const target = event.target as HTMLInputElement;
     const mrp = parseFloat(target.value);
-    const percentage = this.manufacturerForm.get('marginPercentage')?.value || 0;
+    const percentage =
+      this.manufacturerForm.get('marginPercentage')?.value || 0;
     const distributorRate = calculatePercentageMargin(mrp, percentage);
     this.productsArray.at(i).get('distributorRate')?.setValue(distributorRate);
   }
 
-   cancel() {
-    this.shareData.emit( {cancel: true});
+  cancel() {
+    this.shareData.emit({ cancel: true });
   }
 }

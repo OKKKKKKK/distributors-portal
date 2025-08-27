@@ -45,7 +45,7 @@ export class CustomerService {
     return this.customers$();
   } */
 
-  createcustomer(customer: Partial<Customer>): Promise<any> {
+  createCustomer(customer: Partial<Customer>): Promise<any> {
     const customer$ =
       this.httpClient.post<Customer>(`${this.url}/customers`, customer);
     return firstValueFrom(customer$);

@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { Manufacturer } from '../models/constants';
+import { ApiResponse, CreateManufacturer, Manufacturer } from '../models/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class ManufacturerService {
 
   // Signals for state
   readonly manufacturers$ = signal<Manufacturer[]>([]);
-  readonly manufacturer$ = signal<Manufacturer | null>(null);
+  readonly manufacturer$ = signal<ApiResponse<Manufacturer> | null>(null);
   readonly loading$ = signal(false);
   readonly error$ = signal<string | null>(null);
 
@@ -32,7 +32,11 @@ export class ManufacturerService {
       });
   }
 
-  createManufacturer(manufacturer: Manufacturer) {
-    return this.httpClient.post(`${this.url}/manufacturers`, manufacturer);
+  createManufacturer(manufacturer: CreateManufacturer) {
+    return this.httpClient.post<ApiResponse<Manufacturer>>(`${this.url}/manufacturers`, manufacturer).subscribe(res=> {
+      this.manufacturer$.set(res);
+    }, (error)=> {
+      this.error$.set(error.message || 'Something went wrong');
+    })
   }
 }

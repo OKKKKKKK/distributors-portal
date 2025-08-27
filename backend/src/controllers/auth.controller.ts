@@ -34,7 +34,11 @@ export const userRegister = async (req: Request, res: Response) => {
     secure: process.env.NODE_ENV === "production",
   });
 
-  return res.json({ accessToken });
+  return res.json({ 
+    user,
+    code: 201,
+    message: `User registered successfully with id ${user._id}`
+   });
 };
 
 export const login = async (req: Request, res: Response) => {

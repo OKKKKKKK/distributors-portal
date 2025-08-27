@@ -25,8 +25,11 @@
 
         <mat-checkbox class="mb-2">Remember me</mat-checkbox>
 
-        <button mat-raised-button color="primary" class="w-100" (click)="login()">
+        <button mat-raised-button color="primary" class="w-100" [disabled]="loginForm.invalid" (click)="login()">
           Login
+        </button>
+        <button mat-raised-button color="primary" class="mt-2 w-100" (click)="router.navigate(['/register'])">
+          register
         </button>
       </form>
     </mat-card-content>

@@ -1,7 +1,9 @@
 import {
   Component,
   computed,
+  effect,
   EventEmitter,
+  inject,
   Inject,
   OnInit,
   Output,
@@ -18,6 +20,7 @@ import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { SharedData } from '../customer-products/customer-products.component';
 import { ManufacturerService } from 'src/app/shared/services/manufacturer.service';
 import { calculatePercentageMargin } from 'src/app/shared/commonFunctions';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-create-customer',
@@ -26,34 +29,46 @@ import { calculatePercentageMargin } from 'src/app/shared/commonFunctions';
   standalone: false,
 })
 export class CreateCustomerComponent implements OnInit {
-  // snackbarService = Inject(SnackbarService);
-  // customerService = Inject(CustomerService);
+  
+  snackbarService = inject(SnackbarService);
+  customerService = inject(CustomerService);
+  fb = inject(FormBuilder)
+  manufacturerService = inject(ManufacturerService);
+
+  customerForm = this.fb.group({
+    name: ['', Validators.required],
+    outstanding: [0],
+    address: [''],
+    marginPercentage: [0, Validators.required],
+    manufacturerId: ['', Validators.required],
+    customerProducts: this.fb.array([]),
+  });
 
   manufacturers$ = this.manufacturerService.manufacturers$;
+  manufacturerId$ = toSignal(
+  this.customerForm.get('manufacturerId')!.valueChanges,
+  { initialValue: this.customerForm.get('manufacturerId')!.value }
+);
   products$ = computed<Product[]>(() => {
-    const manufacturerList = this.manufacturers$();
-    return manufacturerList.flatMap((list) => list.products || []);
-  });
+  const manufacturers = this.manufacturers$() ?? [];
+  const selectedId = this.manufacturerId$();
+
+  if (!selectedId) return [];
+
+  const manufacturer = manufacturers.find(m => m._id === selectedId);
+  return manufacturer?.products ?? [];
+});
   @Output() shareData = new EventEmitter<SharedData>();
 
-  customerForm!: FormGroup;
   constructor(
-    private fb: FormBuilder,
-    private customerService: CustomerService,
-    private snackbarService: SnackbarService,
-    private manufacturerService: ManufacturerService
-  ) {}
+  ) {
+    effect(() => {
+      console.log('Selected manufacturerId:', this.manufacturerId$());
+      console.log('Products:', this.products$());
+    });
+  }
 
   ngOnInit(): void {
-    this.customerForm = this.fb.group({
-      name: ['', Validators.required],
-      outstanding: [0],
-      address: [''],
-      marginPercentage: [0, Validators.required],
-      manufacturerId: ['', Validators.required],
-      customerProducts: this.fb.array([]),
-    });
-
     this.fetchManufacturers();
     this.addProduct();
   }
@@ -78,28 +93,19 @@ export class CreateCustomerComponent implements OnInit {
 
   async createCustomer(customer: Partial<Customer>) {
     try {
-      const newCustomer = await this.customerService.createcustomer(customer);
+      const newCustomer = await this.customerService.createCustomer(customer);
       if (newCustomer?.code === 201) {
         this.snackbarService.show('Created Successfully!');
         this.customerService.getCustomers();
+        this.cancel();
       } else {
         this.snackbarService.show('Something Went Wrong :(');
+        this.cancel();
       }
     } catch (err) {
       console.error(err);
-      alert(`Error creating the course.`);
     }
   }
-  /* createCustomer(customerPayload: Partial<Customer>): void {
-      this.customerService.createcustomer(customerPayload).subscribe((res:any)=>{
-        console.log(res);
-        if(res?.code === 201) {
-          this.snackbarService.show('Created Successfully!');
-        } else {
-          this.snackbarService.show('Something Went Wrong :(');
-        }
-      })
-    } */
 
   addProduct(): void {
     const productGroup = this.fb.group({
@@ -122,14 +128,8 @@ export class CreateCustomerComponent implements OnInit {
     const selectedProduct = this.products$().find((p) => p._id === event.value);
     if (selectedProduct) {
       const productGroup = this.productsArray.at(index) as FormGroup;
-
-      // store product id
-      // productGroup.get('productId')?.setValue(selectedProduct._id);
-
-      // set MRP
       productGroup.get('mrp')?.setValue(selectedProduct.rate);
 
-      // also calculate customerRate if margin is present
       const percentage = this.customerForm.get('marginPercentage')?.value || 0;
       const customerRate = calculatePercentageMargin(
         selectedProduct.rate,
@@ -138,14 +138,6 @@ export class CreateCustomerComponent implements OnInit {
       productGroup.get('customerRate')?.setValue(customerRate);
     }
   }
-
-  /* calculateRate(index: number, value: any): void {
-    console.log(index, value);
-    const customerId = this.customerForm.get('customerId')?.value;
-    const customerRate = calculatePercentageMargin(value.rate, percentage);
-    // assign this value to customer rate
-    this.productsArray.at(index).get('customerRate')?.setValue(customerRate);
-  } */
 
   cancel() {
     this.customerForm.reset();

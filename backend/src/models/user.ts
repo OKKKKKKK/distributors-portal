@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import { Types } from "mongoose";
+import { kMaxLength } from "buffer";
 
 export interface JwtPayload {
   id: string;
@@ -12,6 +13,7 @@ export interface IUser extends Document {
   _id: Types.ObjectId;
   name?: string;
   email: string;
+  address: string;
   password: string;
   role?: "admin" | "customer" | "manufacturer";
   refreshToken?: string | null;
@@ -28,6 +30,10 @@ const userSchema = new Schema<IUser>(
       unique: true,
       required: true,
       lowercase: true,
+    },
+    address: {
+      type: String,
+      max: 300
     },
     password: {
       type: String,
